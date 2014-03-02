@@ -19,12 +19,65 @@
                 <h1><a href="/">Jacob's Blograhams  <strong>A map of DisneyLand for those lost in the Woods</strong></a></h1>
                 <nav><ul>
                     <li><a href="/category/general.html">General</a></li>
+                    <li><a href="/category/misc.html">misc</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/a-blog.html">A blog</a></h1>
+                    <h1 class="entry-title"><a href="/pelican.html">Pelican, or, How I came to despise Ruby</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-03-02T09:15:00">
+                Sun 02 March 2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="/author/jacob-abrahams.html">Jacob Abrahams</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>. </p>
+<p>tags: <a href="/tag/tech.html">tech</a><a href="/tag/nerdish-stuff.html">nerdish stuff</a><a href="/tag/programming.html">programming</a><a href="/tag/metablogging.html">metablogging</a></p>
+</footer><!-- /.post-info --><p>This blog has been in the works for...well...a while now.</p>
+<p>Maybe a year, give or take.</p>
+<p>I bought the domain name back in October in the hopes of having something to show off to interviewers. When it came down to actually making the site, I ran into some issues.</p>
+<p>Namely, I had no idea how to do that.</p>
+<p>To give myself some credit, I did know a thing or two of HTML, CSS, Javascript, jQuery, and nodejs (which is what I was initially using to serve pages, from within a heroku app). But I didn't know good design practices for web (how do i shot CSS), had a lot of out-of-date information (I blame learning HTML back at 1.0), and was too cocky to just delegate all the hard decisions to an existing framework.</p>
+<p>I chose to fix the last one.</p>
+<p>The result was a broken mess that I couldn't bear to link to on my resume out of shame (but will link to here](http://jabrahams-1.herokuapp.com) out of shamelessness). So yesterday, I sat down and made some changes, because I felt work-sick and knew the only way to remedy that was to stare at text files for hours on end. I made a <a href="http://github.com/JacobLuke/jacobluke.github.io">github.io repository</a> and picked a framework: Octopress. It came well-recommended by various acquaintances, it had a neat aesthetic, and the deploy process looked pretty straightforward.</p>
+<p>That mistake cost me 4 hours.</p>
+<p>Let me elaborate a little. I run Windows, partially because I have been for years, partially because I like being able to game, and mostly because of inertia. (I've run Mint and Ubuntu in the past and will probably reinstall one of them at one point.) Octopress is built in Ruby. If there's one programming language community that utterly despises Windows users, it's...well, it's Objective-C, but Ruby's a close second. Basically every step of the build process had to be finagled into working. </p>
+<ul>
+<li>Ruby 2.0.0 doesn't work? Ruby 1.9.3 gets you one step further before breaking.</li>
+<li>Ruby just won't build? Need the not-optional-but-also-not-pre-bundled devkit.</li>
+<li>Gems won't install? Oh, by default they're sent as <em>binaries</em>, which are obviously not going to work on completely different hardware.</li>
+</ul>
+<p>Before I even found the answer to that third one, I was already looking for alternatives. Github pages (like this one) ship with Jekyll by default, but that was apparently just a less-well-loved Octopress. Plus it was still in Ruby. I considered not using a publishing platform, just injecting Bootstrap into the page to make it a little prettier, but decided that I'd rather do something a little more. I even considered writing my own publishing platform, but realized that was way beyond my effort-threshold for this blog. And then I found Pelican.</p>
+<p>Pelican is a blogging framework written in Python. This had a ton of advantages:</p>
+<ul>
+<li>I know that Python at least runs on Windows, since it's what I do most of my non-work day-to-day coding in</li>
+<li>Python projects typically have at least half-decent support for people chained to Microsoft. I actually find it's often better than their Mac support.</li>
+<li>I know enough of the language to debug things when stuff goes wrong, or potentially extend/contribute the project in some way.</li>
+<li>Usually the python community is nice people. Usually.</li>
+</ul>
+<p>So I uninstalled Ruby (both versions that had made their way to my machine), deleted all the random repositories I'd checked out trying to make it work, reset all the settings that the installers had broken, and checked out Pelican. Or tried to, realized that my <code>PATH</code> environment variable was missing most of the subdirectories of my Python installation, fixed that, and got everything working-enough to actually publish an article. And, after some early-morning wrangling with my Host configurations, this blog was born.</p>
+<p>To sum up:
+  * Don't use Windows
+  * If you absolutely must use Windows, don't use Ruby. Use Python.
+  * When in doubt, add more stuff to <code>PATH</code></p>
+<p>Now excuse me while I hunt down a configuration setting.</p>
+<p>J</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/a-blog.html" rel="bookmark"
+                           title="Permalink to A blog">A blog</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-02T01:02:00">
                 Sun 02 March 2014
@@ -34,16 +87,13 @@
                 By <a class="url fn" href="/author/jacob-abrahams.html">Jacob Abrahams</a>
         </address>
 <p>In <a href="/category/general.html">General</a>. </p>
-<p>tags: <a href="/tag/what-is-this.html">what is this</a></p>
-</footer><!-- /.post-info --><p>Well now.</p>
+<p>tags: <a href="/tag/metablogging.html">metablogging</a></p>
+</footer><!-- /.post-info -->                <p>Well now.</p>
 <p>I'd be lying if I said I haven't tried my hand at this before, but I'm giving it another shot. Plus, it's tied to my professional identity this time, which is kind of like holding my own career hostage.</p>
-<p>Hi. I'm Jacob. Nice to meet you.</p>
-<p>I do a bunch of things. I go to school at the University of Waterloo (in the frozen North). I intern at companies from time to time. (My <a href="http://linkedin.com/in/jlabrahams">LinkedIn profile</a> is a good source of truth on what I'm up to in that regard.) I write software from time to time, mostly simple I-wonder-how-fast-I-can-whip-this-up-in-Python things. I read books and listen to music, and when asked can never describe my taste in either, but usually have a point of view on whatever. I play some music too, mostly classical piano. I play video games, though it's kind of like my book-tastes: I never really know which ones. I bike places when my bike isn't broken, which is rare. I like good beer (lager in warm weather, amber ales in the winter), good wine (mostly Riesling and Chardonnay), and good company.</p>
-<p>I don't know what I want this blog to be yet. I have some programming-related rants that have been kicking around in my head for a while, and some short-story ideas I'd want to flesh out a little more. I try to stay away from politics, but who knows? If you're still reading at this point, chances are better-than-even that you know I haven't exactly had the best run of luck the past couple of months, and I'm on the fence about just how much of that I want to get off my chest in such a public and tied-to-me way. Or I might just talk about things I don't know anything about. Yeah, probably that one.</p>
-<p>So there it is. Basically who I am in two paragraphs. If my writing style hasn't driven you away yet, it probably won't. So sit and stay awhile.</p>
-<p>I'm sure it'll be worth it.</p>
-<p>J</p>                </article>
-            </aside><!-- /#featured -->
+<p>Hi. I'm Jacob. Nice ...</p>
+                <a class="readmore" href="/a-blog.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
             </ol><!-- /#posts-list -->
             </section><!-- /#content -->
         <section id="extras" class="body">
