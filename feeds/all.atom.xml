@@ -11,7 +11,7 @@
 &lt;ul&gt;
 &lt;li&gt;Ruby 2.0.0 doesn't work? Ruby 1.9.3 gets you one step further before breaking.&lt;/li&gt;
 &lt;li&gt;Ruby just won't build? Need the not-optional-but-also-not-pre-bundled devkit.&lt;/li&gt;
-&lt;li&gt;Gems won't install? Oh, by default they're sent as &lt;em&gt;binaries&lt;/em&gt;, which are obviously not going to work on completely different hardware.&lt;/li&gt;
+&lt;li&gt;Gems won't install? Oh, by default they're sent as &lt;em&gt;binaries&lt;/em&gt;, which are obviously not going to work on a completely different operating system.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Before I even found the answer to that third one, I was already looking for alternatives. Github pages (like this one) ship with Jekyll by default, but that was apparently just a less-well-loved Octopress. Plus it was still in Ruby. I considered not using a publishing platform, just injecting Bootstrap into the page to make it a little prettier, but decided that I'd rather do something a little more. I even considered writing my own publishing platform, but realized that was way beyond my effort-threshold for this blog. And then I found Pelican.&lt;/p&gt;
 &lt;p&gt;Pelican is a blogging framework written in Python. This had a ton of advantages:&lt;/p&gt;
