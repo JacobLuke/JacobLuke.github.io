@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jacob's Blograhams</title><link href="/" rel="alternate"></link><link href="/feeds%5Ctech.atom.xml" rel="self"></link><id>/</id><updated>2014-03-02T09:15:00Z</updated><entry><title>Pelican, or, How I came to despise Ruby</title><link href="/pelican.html" rel="alternate"></link><updated>2014-03-02T09:15:00Z</updated><author><name>Jacob Abrahams</name></author><id>tag:,2014-03-02:pelican.html</id><summary type="html">&lt;p&gt;This blog has been in the works for...well...a while now.&lt;/p&gt;
+&lt;p&gt;Maybe a year, give or take.&lt;/p&gt;
+&lt;p&gt;I bought the domain name back in October in the hopes of having something to show off to interviewers. When it came down to actually making the site, I ran into some issues.&lt;/p&gt;
+&lt;p&gt;Namely, I had no idea how to do that.&lt;/p&gt;
+&lt;p&gt;To give myself some credit, I did know a thing or two of HTML, CSS, Javascript, jQuery, and nodejs (which is what I was initially using to serve pages, from within a heroku app). But I didn't know good design practices for web (how do i shot CSS), had a lot of out-of-date information (I blame learning HTML back at 1.0), and was too cocky to just delegate all the hard decisions to an existing framework.&lt;/p&gt;
+&lt;p&gt;I chose to fix the last one.&lt;/p&gt;
+&lt;p&gt;The result was a broken mess that I couldn't bear to link to on my resume out of shame (but will link to here](http://jabrahams-1.herokuapp.com) out of shamelessness). So yesterday, I sat down and made some changes, because I felt work-sick and knew the only way to remedy that was to stare at text files for hours on end. I made a &lt;a href="http://github.com/JacobLuke/jacobluke.github.io"&gt;github.io repository&lt;/a&gt; and picked a framework: Octopress. It came well-recommended by various acquaintances, it had a neat aesthetic, and the deploy process looked pretty straightforward.&lt;/p&gt;
+&lt;p&gt;That mistake cost me 4 hours.&lt;/p&gt;
+&lt;p&gt;Let me elaborate a little. I run Windows, partially because I have been for years, partially because I like being able to game, and mostly because of inertia. (I've run Mint and Ubuntu in the past and will probably reinstall one of them at one point.) Octopress is built in Ruby. If there's one programming language community that utterly despises Windows users, it's...well, it's Objective-C, but Ruby's a close second. Basically every step of the build process had to be finagled into working. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ruby 2.0.0 doesn't work? Ruby 1.9.3 gets you one step further before breaking.&lt;/li&gt;
+&lt;li&gt;Ruby just won't build? Need the not-optional-but-also-not-pre-bundled devkit.&lt;/li&gt;
+&lt;li&gt;Gems won't install? Oh, by default they're sent as &lt;em&gt;binaries&lt;/em&gt;, which are obviously not going to work on a completely different operating system.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Before I even found the answer to that third one, I was already looking for alternatives. Github pages (like this one) ship with Jekyll by default, but that was apparently just a less-well-loved Octopress. Plus it was still in Ruby. I considered not using a publishing platform, just injecting Bootstrap into the page to make it a little prettier, but decided that I'd rather do something a little more. I even considered writing my own publishing platform, but realized that was way beyond my effort-threshold for this blog. And then I found Pelican.&lt;/p&gt;
+&lt;p&gt;Pelican is a blogging framework written in Python. This had a ton of advantages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I know that Python at least runs on Windows, since it's what I do most of my non-work day-to-day coding in&lt;/li&gt;
+&lt;li&gt;Python projects typically have at least half-decent support for people chained to Microsoft. I actually find it's often better than their Mac support.&lt;/li&gt;
+&lt;li&gt;I know enough of the language to debug things when stuff goes wrong, or potentially extend/contribute the project in some way.&lt;/li&gt;
+&lt;li&gt;Usually the python community is nice people. Usually.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So I uninstalled Ruby (both versions that had made their way to my machine), deleted all the random repositories I'd checked out trying to make it work, reset all the settings that the installers had broken, and checked out Pelican. Or tried to, realized that my &lt;code&gt;PATH&lt;/code&gt; environment variable was missing most of the subdirectories of my Python installation, fixed that, and got everything working-enough to actually publish an article. And, after some early-morning wrangling with my Host configurations, this blog was born.&lt;/p&gt;
+&lt;p&gt;To sum up:
+  * Don't use Windows
+  * If you absolutely must use Windows, don't use Ruby. Use Python.
+  * When in doubt, add more stuff to &lt;code&gt;PATH&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Now excuse me while I hunt down a configuration setting.&lt;/p&gt;
+&lt;p&gt;J&lt;/p&gt;</summary><category term="tech"></category><category term="nerdish stuff"></category><category term="programming"></category><category term="metablogging"></category></entry></feed>
