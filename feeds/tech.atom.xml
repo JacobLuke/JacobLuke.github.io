@@ -22,9 +22,11 @@
 &lt;li&gt;Usually the python community is nice people. Usually.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;So I uninstalled Ruby (both versions that had made their way to my machine), deleted all the random repositories I'd checked out trying to make it work, reset all the settings that the installers had broken, and checked out Pelican. Or tried to, realized that my &lt;code&gt;PATH&lt;/code&gt; environment variable was missing most of the subdirectories of my Python installation, fixed that, and got everything working-enough to actually publish an article. And, after some early-morning wrangling with my Host configurations, this blog was born.&lt;/p&gt;
-&lt;p&gt;To sum up:
-  * Don't use Windows
-  * If you absolutely must use Windows, don't use Ruby. Use Python.
-  * When in doubt, add more stuff to &lt;code&gt;PATH&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;To sum up:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Don't use Windows&lt;/li&gt;
+&lt;li&gt;If you absolutely must use Windows, don't use Ruby. Use Python.&lt;/li&gt;
+&lt;li&gt;When in doubt, add more stuff to &lt;code&gt;PATH&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;Now excuse me while I hunt down a configuration setting.&lt;/p&gt;
 &lt;p&gt;J&lt;/p&gt;</summary><category term="tech"></category><category term="nerdish stuff"></category><category term="programming"></category><category term="metablogging"></category></entry></feed>
