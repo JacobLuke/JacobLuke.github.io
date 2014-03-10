@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Jacob's Blograhams - Tech</title>
+        <title>Jacob's Blograhams - tech</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
         <link href="/feeds\all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
@@ -19,13 +19,104 @@
                 <h1><a href="/">Jacob's Blograhams  <strong>A map of DisneyLand for people lost in the woods</strong></a></h1>
                 <nav><ul>
                     <li><a href="/category/general.html">General</a></li>
-                    <li class="active"><a href="/category/tech.html">Tech</a></li>
+                    <li><a href="/category/life.html">Life</a></li>
+                    <li class="active"><a href="/category/tech.html">tech</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/pelican.html">Pelican, or, How I came to despise Ruby</a></h1>
+                    <h1 class="entry-title"><a href="/java.html">Java - the Barbed-Wire Fence of Programming</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-03-08T19:00:00">
+                Sat 08 March 2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="/author/jacob-abrahams.html">Jacob Abrahams</a>
+        </address>
+<p>In <a href="/category/tech.html">tech</a>. </p>
+<p>tags: <a href="/tag/tech.html">tech</a><a href="/tag/programming.html">programming</a><a href="/tag/nerdish.html">nerdish</a></p>
+</footer><!-- /.post-info --><p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
+<p>I've been programming Java since high school, and it was the first real language I was exposed to. I suspsect that, when I sleep, I still type</p>
+<div class="highlight"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+
+
+<p>because it's <em>that</em> ingrained in my muscle memory. And you know what?</p>
+<p>Java is an <em>awful</em> choice for a first language.</p>
+<p>I'm not going to just state that, I'll give reasons:</p>
+<ul>
+<li>Java <em>requires</em> Object-Oriented Programming. Every java program is a function embedded in an object. Way to keep a gentle learning curve, there.</li>
+<li>Java relies extensively on imports from other libraries, and other classes and types. That's so much to explain to a beginning programmer. Or not, which was the case with me: just don't explain anything, and just use it.</li>
+<li>Java forces exception handling. Never mind that you're just starting out and probably don't even know what an exception is.</li>
+<li>Java is garbage-collected, which means that you don't even know where things are going. <code>new</code> is just a keyword that makes things happen to you.</li>
+<li>Java tends to use verbosity to the extreme: it makes simple tasks tedious, and complex tasks impossible.</li>
+</ul>
+<p>Probably think with Point 4 up there that I advocate C or C++ instead, right? Well, yes and no. I think that those languages are great for teaching a fledgling programmer that the program you write can do horrible, terrifying things if you fuck up, which can be great for traumatizing a freshman programmer into getting his/her shit together, or it can mess up their mind really badly. I also think that languages like Python are too high-level to make certain the programmer knows exactly what they're doing, relying on language constructs more than common sense. So, I'd actually like to see someone teach using C and Python <em>in combination</em>. (Though not in CPython, because that's really just the worst of both worlds.)</p>
+<p>Anyway, this article isn't about ripping on Java as a choice of teaching language. It's about ripping on Java's design choices. Full disclosure from this point on: I actually write Java full-time, so I'm going to avoid writing my way out of a job.</p>
+<p>Let's get down to it:</p>
+<ul>
+<li>Verbosity. Oh my <em>God</em> the verbosity. My fingers sometimes hurt after typing Java more than they'd hurt after an essay or a particularly long-winded blog post.</li>
+<li>Strictness in file organization. A file named [Foo].java can only have one public class named [Foo]. If it's in a packaged called com.abba.jesus.pidgeot, then it's file path has to be <code>[something]/com/abba/jesus/pidgeot/Foo.java</code>, even if there's nothing in packages com, com.abba, or com.jesus.</li>
+<li>Weird type-boxing/casting rules. Each of the value types is implicitly convertible to a related class in <code>java.util</code> (ie. <code>int</code> =&gt; <code>java.util.Integer</code>)...except as an argument to a generic class, where it has to be declared as the class rather than the value-type (ie. <code>List&lt;int&gt;</code> is a ParseException). This is fine (mostly), except that any function that takes a generic <code>T[]</code> has to have a <em>separate implementation for each value type</em>. Further, Java disallows casts between different class types (that aren't covariant)...except for a variable of <em>any</em> type <code>v</code>, <code>v + ""</code> is <em>always</em> a string and never results in a NullPointerException when <code>v</code> is <code>null</code>.</li>
+<li>The weirdness of exception handling. Prior to Java 7, there was no way to handle multiple exceptions in a single block, leaving copious room for typos in copy-pasting the same damn block to both related handlers. Oh, and you have to handle every Exception, regardless of if it makes sense to...unless it's a RuntimeException. Then the JVM gives it a free pass. Why even <em>have</em> a duality? Why not just have stuff like that be handled as Errors or something?</li>
+<li>Weirdly inconsistent library support. See <a href="http://tech.puredanger.com/2010/03/31/do-we-want-a-java-util-pair/">this article</a> on the concept of a Pair class, for instance. They basically say, "Oh I don't think it's necessary, so no one else will." I've also heard people say, "Programmers will use it wrong." That is a <em>terrible</em> reason not to support something, especially in a util class of all things. On that note...</li>
+<li>Complete lack of operator overloading. Which would you rather see:
+    <pre>
+    BigInteger a = new BigInteger("12343212");
+    BigInteger b = new BigInteger("234231999");
+    BigInteger c = new BigInteger("65565790099");
+    return c.add(b.muliply(a));
+    </pre>
+    or
+    <pre>
+    return c + (b * a);
+    </pre>
+    Again, the response seems to be, "People will use it wrong." And a lot of the time, the hatred is directed at C++, specifically the stream operator:
+    <pre>
+    int i;
+    cin &gt;&gt; i;
+    cout &lt;&lt; i &lt;&lt; endl;
+    </pre></li>
+</ul>
+<p>To compare, let's discuss Scala, a language built on top of the JVM. Let's see what it does differently:</p>
+<ul>
+<li>Verbosity. Scala tends towards the succinct whenever possible, at least in my experience.</li>
+<li>More free-form package organization. Scala will find your files, don't worry about what you name them. You can also put more than one top-level public class in a single file (though this is still discouraged)</li>
+<li>More intuitive type-coercion. Scala's type system is complex. I don't know enough about lambda calculus to pretend I fully understand every part of it, but I do know they make value types <em>effectively just a different part of the standard hierarchy</em>. <code>List&lt;int&gt;</code> isn't a syntax problem anymore: it just works.</li>
+<li>Free-form casting and conversions. Want <code>A</code> to always make sense as a <code>B</code>? Why not! You can do that.</li>
+<li>No exceptions are forced to be checked anymore. Rejoice!</li>
+<li>On the library support, it just tries to have as wide support as possible, which isn't always a good thing. (Want to know all of Scala? Too bad, that's what the internet's for.)</li>
+<li>Operator overloading is just another function. This <em>maybe</em> goes a bit too far, since you can make operators using basically any character. (The <code>./</code> operator for fold-left is my favourite.)</li>
+</ul>
+<p>And, while we're at it, let's look at C#, a language made because Microsoft didn't want to be sued for using Java at one point[citation needed]:</p>
+<ul>
+<li>Still verbose, though I'd argue less so.</li>
+<li>Package organization? Totally up to you. Hey, have 5 classes per file if you want.</li>
+<li>A similar (though simpler) type system to Scala. Value types are <code>struct</code>s, everything else is an <code>obejct</code>, and <code>struct</code>s can be semantically treated like <code>object</code>s.</li>
+<li>Define your own cast operators! Make them as explicit as you want! </li>
+<li>Exceptions don't need to be checked. Funny how often this pops up...</li>
+<li>A decent-ish standard library which supports most of the things you'd want. Maps that <em>actually</em> act the same as other iterables (as they damn-well should).</li>
+<li>Override <em>only the existing operators and only within the definition  of the class itself</em> (ie, no overriding <code>int + int</code> or something). Humourously, the bit shift operators (ie. the straming operators in C++) can only have the second operand be an <code>int</code>, <em>because they're still pissed about that</em>.</li>
+</ul>
+<p>Don't take this to mean Java does everything wrong. The JVM is a great piece of technology, and the language has some neat constructs seen rarely elsewhere. (Anonymous interfaces, anyone?) But <em>so many</em> of its design decisions serve merely to act out of spite to the admittedly-overindulgent amount of freedom that C++ gives programmers. And spite is a <em>terrible</em> way to drive a design process. Scala, it seems, was designed out of counter-spite: it is <em>so</em> different from Java, yet is based on the exact same technology stack. In my mind, <em>Scala is the biggest "Fuck You" to Java that exists</em>. (C# only loses out on this because it's tied so tightly to Windows that it rarely sees the light of day outside of Microsoft developer pet-projects and ASP.NET-based websites.) And when a competitor springs up just to subvert everything you've done in an ironic way? Face it, Java, you've become the new C++. And not in a good way.</p>
+<p>So there's my Java rant. It's been a long time coming. I'll probably dissect Python at some point, so if that interests you, tune in again.
+'Til then, I'll be waiting for my code to compile.</p>
+<p>J</p><p>There are <a href="/java.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/pelican.html" rel="bookmark"
+                           title="Permalink to Pelican, or, How I came to despise Ruby">Pelican, or, How I came to despise Ruby</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-02T09:15:00">
                 Sun 02 March 2014
@@ -36,38 +127,12 @@
         </address>
 <p>In <a href="/category/tech.html">Tech</a>. </p>
 <p>tags: <a href="/tag/tech.html">tech</a><a href="/tag/nerdish-stuff.html">nerdish stuff</a><a href="/tag/programming.html">programming</a><a href="/tag/metablogging.html">metablogging</a></p>
-</footer><!-- /.post-info --><p>This blog has been in the works for...well...a while now.</p>
+</footer><!-- /.post-info -->                <p>This blog has been in the works for...well...a while now.</p>
 <p>Maybe a year, give or take.</p>
-<p>I bought the domain name back in October in the hopes of having something to show off to interviewers. When it came down to actually making the site, I ran into some issues.</p>
-<p>Namely, I had no idea how to do that.</p>
-<p>To give myself some credit, I did know a thing or two of HTML, CSS, Javascript, jQuery, and nodejs (which is what I was initially using to serve pages, from within a heroku app). But I didn't know good design practices for web (how do i shot CSS), had a lot of out-of-date information (I blame learning HTML back at 1.0), and was too cocky to just delegate all the hard decisions to an existing framework.</p>
-<p>I chose to fix the last one.</p>
-<p>The result was a broken mess that I couldn't bear to link to on my resume out of shame (but will link to <a href="http://jabrahams-1.herokuapp.com">here</a> out of shamelessness). So yesterday, I sat down and made some changes, because I felt work-sick and knew the only way to remedy that was to stare at text files for hours on end. I made a <a href="http://github.com/JacobLuke/jacobluke.github.io">github.io repository</a> and picked a framework: Octopress. It came well-recommended by various acquaintances, it had a neat aesthetic, and the deploy process looked pretty straightforward.</p>
-<p>That mistake cost me 4 hours.</p>
-<p>Let me elaborate a little. I run Windows, partially because I have been for years, partially because I like being able to game, and mostly because of inertia. (I've run Mint and Ubuntu in the past and will probably reinstall one of them at one point.) Octopress is built in Ruby. If there's one programming language community that utterly despises Windows users, it's...well, it's Objective-C, but Ruby's a close second. Basically every step of the build process had to be finagled into working. </p>
-<ul>
-<li>Ruby 2.0.0 doesn't work? Ruby 1.9.3 gets you one step further before breaking.</li>
-<li>Ruby just won't build? Need the not-optional-but-also-not-pre-bundled devkit.</li>
-<li>Gems won't install? Oh, by default they're sent as <em>binaries</em>, which are obviously not going to work on a completely different operating system.</li>
-</ul>
-<p>Before I even found the answer to that third one, I was already looking for alternatives. Github pages (like this one) ship with Jekyll by default, but that was apparently just a less-well-loved Octopress. Plus it was still in Ruby. I considered not using a publishing platform, just injecting Bootstrap into the page to make it a little prettier, but decided that I'd rather do something a little more. I even considered writing my own publishing platform, but realized that was way beyond my effort-threshold for this blog. And then I found Pelican.</p>
-<p>Pelican is a blogging framework written in Python. This had a ton of advantages:</p>
-<ul>
-<li>I know that Python at least runs on Windows, since it's what I do most of my non-work day-to-day coding in</li>
-<li>Python projects typically have at least half-decent support for people chained to Microsoft. I actually find it's often better than their Mac support.</li>
-<li>I know enough of the language to debug things when stuff goes wrong, or potentially extend/contribute the project in some way.</li>
-<li>Usually the python community is nice people. Usually.</li>
-</ul>
-<p>So I uninstalled Ruby (both versions that had made their way to my machine), deleted all the random repositories I'd checked out trying to make it work, reset all the settings that the installers had broken, and checked out Pelican. Or tried to, realized that my <code>PATH</code> environment variable was missing most of the subdirectories of my Python installation, fixed that, and got everything working-enough to actually publish an article. And, after some early-morning wrangling with my Host configurations, this blog was born.</p>
-<p>To sum up:</p>
-<ul>
-<li>Don't use Windows</li>
-<li>If you absolutely must use Windows, don't use Ruby. Use Python.</li>
-<li>When in doubt, add more stuff to <code>PATH</code></li>
-</ul>
-<p>Now excuse me while I hunt down a configuration setting.</p>
-<p>J</p><p>There are <a href="/pelican.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
+<p>I bought the domain name back in October in the hopes of having something to show off to interviewers. When it came down to actually making the site, I ran into some ...</p>
+                <a class="readmore" href="/pelican.html">read more</a>
+<p>There are <a href="/pelican.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
             </ol><!-- /#posts-list -->
             </section><!-- /#content -->
         <section id="extras" class="body">
