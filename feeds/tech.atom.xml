@@ -50,7 +50,7 @@
 &lt;li&gt;Free-form casting and conversions. Want &lt;code&gt;A&lt;/code&gt; to always make sense as a &lt;code&gt;B&lt;/code&gt;? Why not! You can do that.&lt;/li&gt;
 &lt;li&gt;No exceptions are forced to be checked anymore. Rejoice!&lt;/li&gt;
 &lt;li&gt;On the library support, it just tries to have as wide support as possible, which isn't always a good thing. (Want to know all of Scala? Too bad, that's what the internet's for.)&lt;/li&gt;
-&lt;li&gt;Operator overloading is just another function. This &lt;em&gt;maybe&lt;/em&gt; goes a bit too far, since you can make operators using basically any character. (The &lt;code&gt;./&lt;/code&gt; operator for fold-left is my favourite.)&lt;/li&gt;
+&lt;li&gt;Operator overloading is just another function. This &lt;em&gt;maybe&lt;/em&gt; goes a bit too far, since you can make operators using basically any character. (The &lt;code&gt;/:&lt;/code&gt; operator for fold-left is my favourite.)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;And, while we're at it, let's look at C#, a language made because Microsoft didn't want to be sued for using Java at one point[citation needed]:&lt;/p&gt;
 &lt;ul&gt;
