@@ -54,7 +54,7 @@
 <p>To fix these perceived problems, C++ did a bunch of things. First and foremost, they created four cast operators:</p>
 <ul>
 <li><code>static_cast</code> - you <em>know</em> that <code>t</code> can be thought of as a <code>V</code>, or you're willing to pay some pretty hefty consequences if you're wrong.</li>
-<li><code>dynamic_cast</code> - <code>T</code> and <code>V</code> are pointer-types, and <code>T</code> is a base type of <code>V</code>. You're pretty sure <code>t</code> is actually a <code>V</code>, but you don't want your program to explode if you're wrong, so you're okay if an exception (specifically <code>std::bad_cast</code>) is thrown when your assumption turns out to be false.</li>
+<li><code>dynamic_cast</code> - <code>T</code> and <code>V</code> are pointer/reference-types, and <code>T</code> is a base type of <code>V</code>. You're pretty sure <code>t</code> is actually a <code>V</code>, but you don't want your program to explode if you're wrong, so you're okay if an exception (specifically <code>std::bad_cast</code>) is thrown when your assumption turns out to be false. (If everything is pointers, <code>NULL</code>/<code>nullptr</code> is returned instead.)</li>
 <li><code>reinterpret_cast</code> - you know that <code>t</code> isn't a <code>V</code>, but you think that the binary data in a <code>T</code> makes sense interpreted as a <code>V</code>, so you want the compiler to just look the other way for a second or two.</li>
 <li><code>const_cast</code> - You know that <code>T</code>s say they shouldn't be modified, but you have reason to believe that it's okay to do so (assuming that <code>T</code> is a <code>const V</code>). You can also cast away volatility, but I don't really know why you would.</li>
 </ul>
