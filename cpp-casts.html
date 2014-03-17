@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Jacob's Blograhams - tech</title>
+        <title>Cast operators in C++</title>
         <link rel="stylesheet" href="http://jabrahams.ca/theme/css/main.css" />
         <link href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
@@ -23,10 +23,16 @@
                     <li class="active"><a href="http://jabrahams.ca/category/tech.html">tech</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://jabrahams.ca/cpp-casts.html" rel="bookmark"
+           title="Permalink to Cast operators in C++">Cast operators in C++</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="JacobAbes">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-casts.html">Cast operators in C++</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-17T12:00:00">
                 Mon 17 March 2014
@@ -37,7 +43,7 @@
         </address>
 <p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
 <p>tags: <a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/c.html">c++</a></p>
-</footer><!-- /.post-info --><p>Alright, I'm done bitching about Java. The maelstrom from my last post was exhausting (on both sides of the issue), and I don't have enough energy to deal with that every single week. Plus, I'm basically out of content on Java (more or less). Originally, that meant that I would spend this week on Python. However, I saw that as kicking another anthill altogether, so I'm pushing that one back at least a week.</p>
+</footer><!-- /.post-info -->      <p>Alright, I'm done bitching about Java. The maelstrom from my last post was exhausting (on both sides of the issue), and I don't have enough energy to deal with that every single week. Plus, I'm basically out of content on Java (more or less). Originally, that meant that I would spend this week on Python. However, I saw that as kicking another anthill altogether, so I'm pushing that one back at least a week.</p>
 <p>Instead, let's talk about C++.</p>
 <p>As you may have noticed, the title of this article is <em>somewhat</em> narrow in scope. That's mostly because I couldn't compress my C++ critique to a single article, and slightly to abuse the good faith of my current readerbase in a desperate bid to draw out whatever lifespan this blog has to the last possible second. It's also because I work with C++ fairly rarely, so writing these articles requires drawing out stale vitrol from the dank recesses of my mind, which takes time to cultivate into proper rage. Plus, my relationship with C++ is so much less hateful: I have on multiple occasions <em>actively chosen</em> to use C++ for tasks. So this will be the first of (let's say) 3 articles. (This number will not update with the number of articles I write. It will just become wrong.)</p>
 <h2>Brief History</h2>
@@ -83,61 +89,24 @@
 </ul>
 <p>C++ is <em>huge</em>. I just wrote more on one tiny part of it than I wrote on <em>all of Java</em>. And I'm probably going to write more, given the right feedback. If that sounds like a good thing, let me know. 'Til then, I'll just continue waiting for my Java-based IDE to unfreeze.</p>
 <p>(Seriously. Not even kidding)</p>
-<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-casts.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>J</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "cpp-casts.html";
+        var disqus_url = "http://jabrahams.ca/cpp-casts.html";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://jabrahams.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/java.html" rel="bookmark"
-                           title="Permalink to Java - the Barbed-Wire Fence of Programming">Java - the Barbed-Wire Fence of Programming</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-03-08T19:00:00">
-                Sat 08 March 2014
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info -->                <p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
-<p>I've been programming Java since high school, and it was the first real language I was ...</p>
-                <a class="readmore" href="http://jabrahams.ca/java.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/java.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/pelican.html" rel="bookmark"
-                           title="Permalink to Pelican, or, How I came to despise Ruby">Pelican, or, How I came to despise Ruby</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-03-02T09:15:00">
-                Sun 02 March 2014
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">Tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/nerdish-stuff.html">nerdish stuff</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/metablogging.html">metablogging</a></p>
-</footer><!-- /.post-info -->                <p>This blog has been in the works for...well...a while now.</p>
-<p>Maybe a year, give or take.</p>
-<p>I bought the domain name back in October in the hopes of having something to show off to interviewers. When it came down to actually making the site, I ran into some ...</p>
-                <a class="readmore" href="http://jabrahams.ca/pelican.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/pelican.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-            </ol><!-- /#posts-list -->
-            </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="social">
                         <h2>social</h2>

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <title>Jacob's Blograhams - programming</title>
         <link rel="stylesheet" href="http://jabrahams.ca/theme/css/main.css" />
-        <link href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
+        <link href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
         <!--[if IE]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -26,7 +26,77 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/java.html">Java - the Barbed-Wire Fence of Programming</a></h1>
+                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-casts.html">Cast operators in C++</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-03-17T12:00:00">
+                Mon 17 March 2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
+        </address>
+<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
+<p>tags: <a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/c.html">c++</a></p>
+</footer><!-- /.post-info --><p>Alright, I'm done bitching about Java. The maelstrom from my last post was exhausting (on both sides of the issue), and I don't have enough energy to deal with that every single week. Plus, I'm basically out of content on Java (more or less). Originally, that meant that I would spend this week on Python. However, I saw that as kicking another anthill altogether, so I'm pushing that one back at least a week.</p>
+<p>Instead, let's talk about C++.</p>
+<p>As you may have noticed, the title of this article is <em>somewhat</em> narrow in scope. That's mostly because I couldn't compress my C++ critique to a single article, and slightly to abuse the good faith of my current readerbase in a desperate bid to draw out whatever lifespan this blog has to the last possible second. It's also because I work with C++ fairly rarely, so writing these articles requires drawing out stale vitrol from the dank recesses of my mind, which takes time to cultivate into proper rage. Plus, my relationship with C++ is so much less hateful: I have on multiple occasions <em>actively chosen</em> to use C++ for tasks. So this will be the first of (let's say) 3 articles. (This number will not update with the number of articles I write. It will just become wrong.)</p>
+<h2>Brief History</h2>
+<p>I'm assuming my audience is mostly made up of classmates or colleagues, but it doesn't hurt to go over how C++ came to be. Around the early 70s, Dennis Ritchie was building Unix at Bell Labs, when he decided he needed a language that was more portable, more readable, and less error-prone than assembly code. He built C instead, and the programmers of the 70s took to it like the other young adults of the 70s took to recreational drug use. By the 80s, Bjarne Stroustrup saw the drug addiction-like damage C was doing to people, and decided that the fix of the problem would be to <em>add more features</em>, which is eerily similar to heroin's early history. He spearheaded efforts to build a new language, which he dubbed, "C with Classes, Exceptions, Metaprogramming, Generics, Algorithms, and everything else I could think of." This was shortened to "C with Classes," which was later shortened to "C++" because languages with long names are rarely successful. [citation needed] </p>
+<p>(Side note: because of post-increment semantics, Bjarne made a language that was the same as what C <em>used</em> to be, and changed C in the process. The C++-influenced changes in C since the 80s attest to this.)</p>
+<h2>Cast Operators</h2>
+<p>Suppose you have two types, <code>T</code> and <code>V</code>, and an instance of each, <code>t</code> and <code>v</code> respectively. In C, converting a <code>T</code> to a <code>V</code> is easy: just write <code>v = (V)t</code> and it'll probably do something that makes sense. (To elaborate, it will either make a logical conversion if <code>T</code> and <code>V</code> are both numerical types, and it will just reinterpret the value at that point in memory without changing it otherwise. Or it will crash in an implementation-defined way if you're being an idiot, and you deserve that.)</p>
+<p>C++ decided that C's handling of the situation was, like the rest of the language, insufficient, and went about fixing it in an extremely questionable way, just like they did with the rest of the language. They noted a few problems:</p>
+<ul>
+<li>Casts are too easy to hide in code. If you're looking for places where <code>T</code>s are casted to <code>V</code>s, what string are you going to search the code for? <code>(V)</code>? Good luck with that.</li>
+<li>Casts don't show any intent. What if you thought that <code>T</code>s have a logical interpretation as <code>V</code>s, but in fact your code just ends up manipulating parts of <code>V</code>s that you really shouldn't be touching? To the C compiler, you could <em>want</em> to access parts of <code>V</code> like that, because that's also something C-programmers do, and it has no reason to assume you're a sensible human being.</li>
+<li>Casts aren't user-definable. Well, they kind of are, if you assume that your <code>struct</code>s are always packed in the same way across different architectures and operating systems. (See above for why the compiler doesn't assume you aren't doing this.)</li>
+</ul>
+<p>To fix these perceived problems, C++ did a bunch of things. First and foremost, they created four cast operators:</p>
+<ul>
+<li><code>static_cast</code> - you <em>know</em> that <code>t</code> can be thought of as a <code>V</code>, or you're willing to pay some pretty hefty consequences if you're wrong.</li>
+<li><code>dynamic_cast</code> - <code>T</code> and <code>V</code> are pointer-types, and <code>T</code> is a base type of <code>V</code>. You're pretty sure <code>t</code> is actually a <code>V</code>, but you don't want your program to explode if you're wrong, so you're okay if an exception (specifically <code>std::bad_cast</code>) is thrown when your assumption turns out to be false.</li>
+<li><code>reinterpret_cast</code> - you know that <code>t</code> isn't a <code>V</code>, but you think that the binary data in a <code>T</code> makes sense interpreted as a <code>V</code>, so you want the compiler to just look the other way for a second or two.</li>
+<li><code>const_cast</code> - You know that <code>T</code>s say they shouldn't be modified, but you have reason to believe that it's okay to do so (assuming that <code>T</code> is a <code>const V</code>). You can also cast away volatility, but I don't really know why you would.</li>
+</ul>
+<p>(Boost is also trying to add <code>lexical_cast</code> to the group, which would act like <code>[tT]oString</code> in Java/C# but in a bidirectional way, which is kind of neat.)</p>
+<p>If you didn't catch my tone, <em>most of these casts are almost always wrong</em>. Let's go through them again:</p>
+<ul>
+<li><code>static</code> is fine, generally speaking. Nice and greppable, clearly shows intent, and is comparable in speed to a C-cast.</li>
+<li><code>dynamic</code> shows too much doubt on the part of the programmer: why do you only <em>think</em> <code>t</code> is a <code>V</code>? Where is this object coming from if you can't accurately describe its type <em>but you still need to know what it is</em>? Most importantly, <em>why are you ever downcasting</em>? (It's also really slow compared to the others.)</li>
+<li>Do I really need to explain why <code>reinterpret</code> is bad? If <code>static</code> won't compile, then you should step back, take a deep breath, and go back to writing assembly. A <code>std::pair&lt;int, int&gt;</code> is not and will never be a <code>double</code>.</li>
+<li><code>const</code> is justifiable when you're dealing with stupid APIs that give you <code>const</code> variables that you know you can actually write to. If you're <code>const_cast</code>ing in code entirely written by you or someone you know, you should <em>really</em> reconsider.</li>
+</ul>
+<p>For backwards-compatability, C++ includes the C-style cast operator. It's behaviour is basically to run through all these cast operators until one makes sense. This is, of course, almost never what you want, since it solves <em>none</em> of the problems the operator had in C.</p>
+<p>Oh, and there are two other cast operator-like options provided in C++:</p>
+<ul>
+<li>you can define an <code>operator V</code> function inside <code>T</code>'s definition. Or anywhere else, because operators can be overloaded in any scope.</li>
+<li>you can define a constructor in <code>V</code> that takes a single argument that is implicitly convertible to a <code>T</code>.</li>
+</ul>
+<p>Of course, I'm leaving something out here. See, both of these are <em>implicit</em>, meaning you can just write <code>v = t;</code> and it will just pick the first thing that works. Sure, you can declare either as <code>explicit</code>, but only in C++11-onwards: <code>explicit</code> only worked for single-argument constructors <em>for at least 15 years</em>. This lead to ridiculous efforts to get around the language's limitation including (but not limited to) the <a href="http://www.artima.com/cppsource/safebool.html">safe-bool idiom</a> for pointer-like truth-value detection. (This is one of my favourite instances of an extremely complex solution to a simple problem.) Thankfully, this kind of innovation is no longer necessary, but it's still a "gotcha" to watch for, since so few other languages mark conversions as implicit by default.</p>
+<p>(I'm not even going to <em>begin</em> on how complicated this gets with templates and determining function prototypes, because this article is long enough and I want to do templates as a separate article.)</p>
+<p>Does C++ handle this all wrong? I'm on the fence with that. Sure, languages like C# have a more structured, logical approach to casts and conversions (eg. limiting the scope, forcing an explicit/implicit declaration etc.), but C++'s design has always been about giving the programmer as many tools as possible without restricting their freedom. Really, it should be common sense not to abuse <code>reinterpret_cast</code>, but if you're crazy enough to want to, well, C++ will hand you the keyword. It's not going to stop you from pointing the gun at your foot, but it'll help you dial 911. (Unfortunately, it won't stop you from tearing out the phone lines.) The implicit-cast-by-default thing is strange, sure, but once you're aware of it you can probably handle it. All in all, C++ lets you do what you want quickly and (if you choose to) clearly, and that's all that really matters.</p>
+<p>To sum up:</p>
+<ul>
+<li>C++ adds 4 more cast operators. 3 are usually a sign of bad programming somewhere along the line.</li>
+<li>C++ lets you define conversions, but you might be surprised when it decides to apply them.</li>
+<li>The design of casting in C++ makes sense for C++, as long as you're okay with that</li>
+</ul>
+<p>C++ is <em>huge</em>. I just wrote more on one tiny part of it than I wrote on <em>all of Java</em>. And I'm probably going to write more, given the right feedback. If that sounds like a good thing, let me know. 'Til then, I'll just continue waiting for my Java-based IDE to unfreeze.</p>
+<p>(Seriously. Not even kidding)</p>
+<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-casts.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="http://jabrahams.ca/java.html" rel="bookmark"
+                           title="Permalink to Java - the Barbed-Wire Fence of Programming">Java - the Barbed-Wire Fence of Programming</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-08T19:00:00">
                 Sat 08 March 2014
@@ -37,78 +107,11 @@
         </address>
 <p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
 <p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info --><p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
-<p>I've been programming Java since high school, and it was the first real language I was exposed to. I suspect that, when I sleep, I still type</p>
-<div class="highlight"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
-</pre></div>
-
-
-<p>because it's <em>that</em> ingrained in my muscle memory. And you know what?</p>
-<p>Java is an <em>awful</em> choice for a first language.</p>
-<p>I'm not going to just state that, I'll give reasons:</p>
-<ul>
-<li>Java <em>requires</em> Object-Oriented Programming. Every java program is a function embedded in an object. Way to keep a gentle learning curve, there.</li>
-<li>Java relies extensively on imports from other libraries, and other classes and types. That's so much to explain to a beginning programmer. Or not, which was the case with me: just don't explain anything, and just use it.</li>
-<li>Java forces exception handling. Never mind that you're just starting out and probably don't even know what an exception is.</li>
-<li>Java is garbage-collected, which means that you don't even know where things are going. <code>new</code> is just a keyword that makes things happen to you.</li>
-<li>Java tends to use verbosity to the extreme: it makes simple tasks tedious, and complex tasks impossible.</li>
-</ul>
-<p>Probably think with Point 4 up there that I advocate C or C++ instead, right? Well, yes and no. I think that those languages are great for teaching a fledgling programmer that the program you write can do horrible, terrifying things if you fuck up, which can be great for traumatizing a freshman programmer into getting his/her shit together, or it can mess up their mind really badly. I also think that languages like Python are too high-level to make certain the programmer knows exactly what they're doing, relying on language constructs more than common sense. So, I'd actually like to see someone teach using C and Python <em>in combination</em>. (Though not in CPython, because that's really just the worst of both worlds.)</p>
-<p>Anyway, this article isn't about ripping on Java as a choice of teaching language. It's about ripping on Java's design choices. Full disclosure from this point on: I actually write Java full-time, so I'm going to avoid writing my way out of a job.</p>
-<p>Let's get down to it:</p>
-<ul>
-<li>Verbosity. Oh my <em>God</em> the verbosity. My fingers sometimes hurt after typing Java more than they'd hurt after an essay or a particularly long-winded blog post.</li>
-<li>Strictness in file organization. A file named [Foo].java can only have one public class named [Foo]. If it's in a packaged called com.abba.jesus.pidgeot, then it's file path has to be <code>[something]/com/abba/jesus/pidgeot/Foo.java</code>, even if there's nothing in packages com, com.abba, or com.jesus.</li>
-<li>Weird type-boxing/casting rules. Each of the value types is implicitly convertible to a related class in <code>java.util</code> (ie. <code>int</code> =&gt; <code>java.util.Integer</code>)...except as an argument to a generic class, where it has to be declared as the class rather than the value-type (ie. <code>List&lt;int&gt;</code> is a ParseException). This is fine (mostly), except that any function that takes a generic <code>T[]</code> has to have a <em>separate implementation for each value type</em>. Further, Java disallows casts between different class types (that aren't covariant)...except for a variable of <em>any</em> type <code>v</code>, <code>v + ""</code> is <em>always</em> a string and never results in a NullPointerException when <code>v</code> is <code>null</code>.</li>
-<li>The weirdness of exception handling. Prior to Java 7, there was no way to handle multiple exceptions in a single block, leaving copious room for typos in copy-pasting the same damn block to both related handlers. Oh, and you have to handle every Exception, regardless of if it makes sense to...unless it's a RuntimeException. Then the JVM gives it a free pass. Why even <em>have</em> a duality? Why not just have stuff like that be handled as Errors or something?</li>
-<li>Weirdly inconsistent library support. See <a href="http://tech.puredanger.com/2010/03/31/do-we-want-a-java-util-pair/">this article</a> on the concept of a Pair class, for instance. They basically say, "Oh I don't think it's necessary, so no one else will." I've also heard people say, "Programmers will use it wrong." That is a <em>terrible</em> reason not to support something, especially in a util class of all things. On that note...</li>
-<li>Complete lack of operator overloading. Which would you rather see:
-    <pre>
-    BigInteger a = new BigInteger("12343212");
-    BigInteger b = new BigInteger("234231999");
-    BigInteger c = new BigInteger("65565790099");
-    return c.add(b.muliply(a));
-    </pre>
-    or
-    <pre>
-    return c + (b * a);
-    </pre>
-    Again, the response seems to be, "People will use it wrong." And a lot of the time, the hatred is directed at C++, specifically the stream operator:
-    <pre>
-    int i;
-    cin &gt;&gt; i;
-    cout &lt;&lt; i &lt;&lt; endl;
-    </pre></li>
-</ul>
-<p>To compare, let's discuss Scala, a language built on top of the JVM. Let's see what it does differently:</p>
-<ul>
-<li>Verbosity. Scala tends towards the succinct whenever possible, at least in my experience.</li>
-<li>More free-form package organization. Scala will find your files, don't worry about what you name them. You can also put more than one top-level public class in a single file (though this is still discouraged)</li>
-<li>More intuitive type-coercion. Scala's type system is complex. I don't know enough about lambda calculus to pretend I fully understand every part of it, but I do know they make value types <em>effectively just a different part of the standard hierarchy</em>. <code>List&lt;int&gt;</code> isn't a syntax problem anymore: it just works.</li>
-<li>Free-form casting and conversions. Want <code>A</code> to always make sense as a <code>B</code>? Why not! You can do that.</li>
-<li>No exceptions are forced to be checked anymore. Rejoice!</li>
-<li>On the library support, it just tries to have as wide support as possible, which isn't always a good thing. (Want to know all of Scala? Too bad, that's what the internet's for.)</li>
-<li>Operator overloading is just another function. This <em>maybe</em> goes a bit too far, since you can make operators using basically any character. (The <code>/:</code> operator for fold-left is my favourite.)</li>
-</ul>
-<p>And, while we're at it, let's look at C#, a language made because Microsoft didn't want to be sued for using Java at one point[citation needed]:</p>
-<ul>
-<li>Still verbose, though I'd argue less so.</li>
-<li>Package organization? Totally up to you. Hey, have 5 classes per file if you want.</li>
-<li>A similar (though simpler) type system to Scala. Value types are <code>struct</code>s, everything else is an <code>obejct</code>, and <code>struct</code>s can be semantically treated like <code>object</code>s.</li>
-<li>Define your own cast operators! Make them as explicit as you want! </li>
-<li>Exceptions don't need to be checked. Funny how often this pops up...</li>
-<li>A decent-ish standard library which supports most of the things you'd want. Maps that <em>actually</em> act the same as other iterables (as they damn-well should).</li>
-<li>Override <em>only the existing operators and only within the definition  of the class itself</em> (ie, no overriding <code>int + int</code> or something). Humourously, the bit shift operators (ie. the straming operators in C++) can only have the second operand be an <code>int</code>, <em>because they're still pissed about that</em>.</li>
-</ul>
-<p>Don't take this to mean Java does everything wrong. The JVM is a great piece of technology, and the language has some neat constructs seen rarely elsewhere. (Anonymous interfaces, anyone?) But <em>so many</em> of its design decisions serve merely to act out of spite to the admittedly-overindulgent amount of freedom that C++ gives programmers. And spite is a <em>terrible</em> way to drive a design process. Scala, it seems, was designed out of counter-spite: it is <em>so</em> different from Java, yet is based on the exact same technology stack. In my mind, <em>Scala is the biggest "Fuck You" to Java that exists</em>. (C# only loses out on this because it's tied so tightly to Windows that it rarely sees the light of day outside of Microsoft developer pet-projects and ASP.NET-based websites.) And when a competitor springs up just to subvert everything you've done in an ironic way? Face it, Java, you've become the new C++. And not in a good way.</p>
-<p>So there's my Java rant. It's been a long time coming. I'll probably dissect Python at some point, so if that interests you, tune in again.
-'Til then, I'll be waiting for my code to compile.</p>
-<p>J</p><p>There are <a href="http://jabrahams.ca/java.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                <p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
+<p>I've been programming Java since high school, and it was the first real language I was ...</p>
+                <a class="readmore" href="http://jabrahams.ca/java.html">read more</a>
+<p>There are <a href="http://jabrahams.ca/java.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -139,7 +142,7 @@
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            <li><a href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                             <li><a href="http://linkedin.com/in/jlabrahams">LinkedIn</a></li>
                             <li><a href="http://twitter.com/JacobAbes">Twitter</a></li>
