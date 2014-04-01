@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <title>Jacob's Blograhams - tech</title>
         <link rel="stylesheet" href="http://jabrahams.ca/theme/css/main.css" />
-        <link href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
+        <link href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
         <!--[if IE]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -26,7 +26,96 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/java.html">Java - the Barbed-Wire Fence of Programming</a></h1>
+                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-templates.html">C++ - Template Hell</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-03-31T00:00:00">
+                Mon 31 March 2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
+        </address>
+<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
+<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
+</footer><!-- /.post-info --><p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
+<p>Let's talk about generic programming.</p>
+<p>In normal, static-type programming, you say things like, "I know foo is an A, and bar is a B, so I know what type I'll get when I write foo + bar." This is pretty efficient: you know what type everything will be, the compiler does too, and if you're wrong there's a clear and efficient way of telling you so. (ie. The compiler can just go and say, "type A is not type Q," and that will be that.)</p>
+<p>However, suppose you want to say, "I know (or believe) foo has some member baz, and bar has some members twiddle and fiddle, but I don't know or care what type they actually are. Let me write a function that takes foo and bar and does something useful." In languages like C, you can...write something else, because C doesn't let you do anything about it. A is A, and nothing else is A (unless you do some crazy type-punning, but don't do that). In other, more developed OO languages, you have (up to) three solutions:</p>
+<ul>
+<li>
+<p>Interface-based programming, or thinking far-enough ahead and giving your objects a relevant base type to do what you want them to. This is nice when possible, but may have problems when you can't modify the interface after-the-fact. (In these cases the <a href="http://en.wikipedia.org/wiki/Adapter_pattern">Adapter design pattern</a> may help.) Languages with interfaces also often have some kind of generics to apply the concept to containers and the like.</p>
+</li>
+<li>
+<p>Duck-typing. This basically says, "Screw type-safety, figure it out when you try to run the code. If foo doesn't have a baz, deal with it." This is extremely common in scripting languages, and the source of endless headaches and bugs that I won't go into here. (I have to save <em>something</em> for my Python rant.)</p>
+</li>
+<li>
+<p>Templates.</p>
+</li>
+</ul>
+<p>Templates are a solution to generic programming the same way a hammer is a solution to a Rubik's Cube. Take the following function:</p>
+<div class="highlight"><pre><span class="n">Some_Return_Type</span> <span class="nf">func</span><span class="p">(</span><span class="n">Some_Input_Type</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>With some clever definitions, we can actually make this compile:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">TIn</span><span class="p">,</span> <span class="kr">typename</span> <span class="n">TRet</span><span class="o">&gt;</span>
+<span class="n">TRet</span> <span class="n">func</span> <span class="p">(</span><span class="n">TIn</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>We can do even better in C++11:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">())</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>And even better in C++14:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>Looks kind of like duck-typing, right? Sure...if duck-typing generated more code every time you called the function with a different set of types. Further, the header-source model of C++ becomes <em>impossible</em> with templates, since the compiler needs the definition (and not just the declaration) to see if it will compile or not. But, you know what? None of this is that bad. You could argue this is actually a good way of doing things and, on a good day, I might agree with you. No, let's go where it actually gets fucked up.</p>
+<h2>Numerical Templates</h2>
+<p>If you're a Java guy or girl (and I know you are), you're probably going, "Oh neat, templates are just like generics without less obvious error messages." And that means you've never seen templates on anything else, like, say, numbers.</p>
+<p>Please pick up your jaw. It doesn't belong on the floor.</p>
+<p>Sure, instead of <code>typename</code>, you can put <code>size_t</code> or <code>bool</code> or even <code>MyMessedUpEnumType</code> inside the angle brackets. Ostensibly for fixed-size arrays (or something?), numerical templates have a not-so-nice unintended feature: template metaprogramming. As in, you can write programs inside template declarations. Neat, sure, but unclear as <em>hell</em>. For instance, here's a way of computing factorials of compile-time constants:</p>
+<div class="highlight"><pre><span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
+<span class="nx">struct</span> <span class="nx">Fact</span> <span class="p">{</span>
+  <span class="nx">static</span> <span class="nx">size_t</span> <span class="nb">value</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
+<span class="nx">size_t</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="nb">N</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span> <span class="o">=</span> <span class="nb">N</span> <span class="o">*</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="nb">N</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span><span class="p">;</span>
+
+<span class="nx">template</span><span class="o">&lt;&gt;</span>
+<span class="nx">size_t</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Put <code>Fact&lt;5&gt;</code> in your program, and it'll just be replaced by 120 seamlessly. Put Fact&lt;7000&gt; and, well, it might compile. Eventually. (GCC does not compile, it just grumbles about "maximum template depths" and mutters curses from the Old World under its breath.)</p>
+<p>The great thing about numerical templates is that they play some part in making compiler errors <em>completely unreadable</em>. The compiler doesn't know you. It can't assume you won't template on an enumeration. It doesn't know your life and what you've been through. GCC can't afford to take you out to dinner and learn your favourite band. Hell, you might've even <em>wanted</em> the template not to compile...</p>
+<h2>SFINAE and type-traits</h2>
+<p>C++ has this neat (read: horrifying) idiom called, "Substitution Failure is not an Error," or SFINAE for short. It basically says to the compiler, "I've defined this template in 2 (or more) ways. Figure out which one I mean." While (ostensibly) included for good reasons (for instance, you might want to handle pointer-types and value-types differently), it's usually used in ways that fit more into dynamically typed languages: determining attributes of types after-the-fact. Which, y'know, <em>defeats the original purpose of templates</em>.</p>
+<p>But you know what? Compile-time duck-typing isn't the worst solution. It's strictly better than <em>runtime</em> duck-typing, even if you have to know medieval Cyrillic to understand why the compiler thinks you're wrong when you are. It's also more flexible (<em>twitch</em>) than Java-style generics in a lot of ways. Lastly, you have to remember who you're dealing with: C++ developers will run wild with <em>whatever feature you give them</em>. A way to make the compiler Turing-complete? That's a small price to pay.</p>
+<p>And at least you aren't paying at runtime.</p>
+<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-templates.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="http://jabrahams.ca/java.html" rel="bookmark"
+                           title="Permalink to Java - the Barbed-Wire Fence of Programming">Java - the Barbed-Wire Fence of Programming</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-08T19:00:00">
                 Sat 08 March 2014
@@ -37,78 +126,11 @@
         </address>
 <p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
 <p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info --><p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
-<p>I've been programming Java since high school, and it was the first real language I was exposed to. I suspect that, when I sleep, I still type</p>
-<div class="highlight"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
-</pre></div>
-
-
-<p>because it's <em>that</em> ingrained in my muscle memory. And you know what?</p>
-<p>Java is an <em>awful</em> choice for a first language.</p>
-<p>I'm not going to just state that, I'll give reasons:</p>
-<ul>
-<li>Java <em>requires</em> Object-Oriented Programming. Every java program is a function embedded in an object. Way to keep a gentle learning curve, there.</li>
-<li>Java relies extensively on imports from other libraries, and other classes and types. That's so much to explain to a beginning programmer. Or not, which was the case with me: just don't explain anything, and just use it.</li>
-<li>Java forces exception handling. Never mind that you're just starting out and probably don't even know what an exception is.</li>
-<li>Java is garbage-collected, which means that you don't even know where things are going. <code>new</code> is just a keyword that makes things happen to you.</li>
-<li>Java tends to use verbosity to the extreme: it makes simple tasks tedious, and complex tasks impossible.</li>
-</ul>
-<p>Probably think with Point 4 up there that I advocate C or C++ instead, right? Well, yes and no. I think that those languages are great for teaching a fledgling programmer that the program you write can do horrible, terrifying things if you fuck up, which can be great for traumatizing a freshman programmer into getting his/her shit together, or it can mess up their mind really badly. I also think that languages like Python are too high-level to make certain the programmer knows exactly what they're doing, relying on language constructs more than common sense. So, I'd actually like to see someone teach using C and Python <em>in combination</em>. (Though not in CPython, because that's really just the worst of both worlds.)</p>
-<p>Anyway, this article isn't about ripping on Java as a choice of teaching language. It's about ripping on Java's design choices. Full disclosure from this point on: I actually write Java full-time, so I'm going to avoid writing my way out of a job.</p>
-<p>Let's get down to it:</p>
-<ul>
-<li>Verbosity. Oh my <em>God</em> the verbosity. My fingers sometimes hurt after typing Java more than they'd hurt after an essay or a particularly long-winded blog post.</li>
-<li>Strictness in file organization. A file named [Foo].java can only have one public class named [Foo]. If it's in a packaged called com.abba.jesus.pidgeot, then it's file path has to be <code>[something]/com/abba/jesus/pidgeot/Foo.java</code>, even if there's nothing in packages com, com.abba, or com.jesus.</li>
-<li>Weird type-boxing/casting rules. Each of the value types is implicitly convertible to a related class in <code>java.util</code> (ie. <code>int</code> =&gt; <code>java.util.Integer</code>)...except as an argument to a generic class, where it has to be declared as the class rather than the value-type (ie. <code>List&lt;int&gt;</code> is a ParseException). This is fine (mostly), except that any function that takes a generic <code>T[]</code> has to have a <em>separate implementation for each value type</em>. Further, Java disallows casts between different class types (that aren't covariant)...except for a variable of <em>any</em> type <code>v</code>, <code>v + ""</code> is <em>always</em> a string and never results in a NullPointerException when <code>v</code> is <code>null</code>.</li>
-<li>The weirdness of exception handling. Prior to Java 7, there was no way to handle multiple exceptions in a single block, leaving copious room for typos in copy-pasting the same damn block to both related handlers. Oh, and you have to handle every Exception, regardless of if it makes sense to...unless it's a RuntimeException. Then the JVM gives it a free pass. Why even <em>have</em> a duality? Why not just have stuff like that be handled as Errors or something?</li>
-<li>Weirdly inconsistent library support. See <a href="http://tech.puredanger.com/2010/03/31/do-we-want-a-java-util-pair/">this article</a> on the concept of a Pair class, for instance. They basically say, "Oh I don't think it's necessary, so no one else will." I've also heard people say, "Programmers will use it wrong." That is a <em>terrible</em> reason not to support something, especially in a util class of all things. On that note...</li>
-<li>Complete lack of operator overloading. Which would you rather see:
-    <pre>
-    BigInteger a = new BigInteger("12343212");
-    BigInteger b = new BigInteger("234231999");
-    BigInteger c = new BigInteger("65565790099");
-    return c.add(b.muliply(a));
-    </pre>
-    or
-    <pre>
-    return c + (b * a);
-    </pre>
-    Again, the response seems to be, "People will use it wrong." And a lot of the time, the hatred is directed at C++, specifically the stream operator:
-    <pre>
-    int i;
-    cin &gt;&gt; i;
-    cout &lt;&lt; i &lt;&lt; endl;
-    </pre></li>
-</ul>
-<p>To compare, let's discuss Scala, a language built on top of the JVM. Let's see what it does differently:</p>
-<ul>
-<li>Verbosity. Scala tends towards the succinct whenever possible, at least in my experience.</li>
-<li>More free-form package organization. Scala will find your files, don't worry about what you name them. You can also put more than one top-level public class in a single file (though this is still discouraged)</li>
-<li>More intuitive type-coercion. Scala's type system is complex. I don't know enough about lambda calculus to pretend I fully understand every part of it, but I do know they make value types <em>effectively just a different part of the standard hierarchy</em>. <code>List&lt;int&gt;</code> isn't a syntax problem anymore: it just works.</li>
-<li>Free-form casting and conversions. Want <code>A</code> to always make sense as a <code>B</code>? Why not! You can do that.</li>
-<li>No exceptions are forced to be checked anymore. Rejoice!</li>
-<li>On the library support, it just tries to have as wide support as possible, which isn't always a good thing. (Want to know all of Scala? Too bad, that's what the internet's for.)</li>
-<li>Operator overloading is just another function. This <em>maybe</em> goes a bit too far, since you can make operators using basically any character. (The <code>/:</code> operator for fold-left is my favourite.)</li>
-</ul>
-<p>And, while we're at it, let's look at C#, a language made because Microsoft didn't want to be sued for using Java at one point[citation needed]:</p>
-<ul>
-<li>Still verbose, though I'd argue less so.</li>
-<li>Package organization? Totally up to you. Hey, have 5 classes per file if you want.</li>
-<li>A similar (though simpler) type system to Scala. Value types are <code>struct</code>s, everything else is an <code>obejct</code>, and <code>struct</code>s can be semantically treated like <code>object</code>s.</li>
-<li>Define your own cast operators! Make them as explicit as you want! </li>
-<li>Exceptions don't need to be checked. Funny how often this pops up...</li>
-<li>A decent-ish standard library which supports most of the things you'd want. Maps that <em>actually</em> act the same as other iterables (as they damn-well should).</li>
-<li>Override <em>only the existing operators and only within the definition  of the class itself</em> (ie, no overriding <code>int + int</code> or something). Humourously, the bit shift operators (ie. the straming operators in C++) can only have the second operand be an <code>int</code>, <em>because they're still pissed about that</em>.</li>
-</ul>
-<p>Don't take this to mean Java does everything wrong. The JVM is a great piece of technology, and the language has some neat constructs seen rarely elsewhere. (Anonymous interfaces, anyone?) But <em>so many</em> of its design decisions serve merely to act out of spite to the admittedly-overindulgent amount of freedom that C++ gives programmers. And spite is a <em>terrible</em> way to drive a design process. Scala, it seems, was designed out of counter-spite: it is <em>so</em> different from Java, yet is based on the exact same technology stack. In my mind, <em>Scala is the biggest "Fuck You" to Java that exists</em>. (C# only loses out on this because it's tied so tightly to Windows that it rarely sees the light of day outside of Microsoft developer pet-projects and ASP.NET-based websites.) And when a competitor springs up just to subvert everything you've done in an ironic way? Face it, Java, you've become the new C++. And not in a good way.</p>
-<p>So there's my Java rant. It's been a long time coming. I'll probably dissect Python at some point, so if that interests you, tune in again.
-'Til then, I'll be waiting for my code to compile.</p>
-<p>J</p><p>There are <a href="http://jabrahams.ca/java.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                <p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
+<p>I've been programming Java since high school, and it was the first real language I was ...</p>
+                <a class="readmore" href="http://jabrahams.ca/java.html">read more</a>
+<p>There are <a href="http://jabrahams.ca/java.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -133,35 +155,13 @@
                 <a class="readmore" href="http://jabrahams.ca/pelican.html">read more</a>
 <p>There are <a href="http://jabrahams.ca/pelican.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
             </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/c-template-hell.html" rel="bookmark"
-                           title="Permalink to C++ - Template Hell">C++ - Template Hell</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2013-03-31T00:00:00">
-                Sun 31 March 2013
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info -->                <p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
-                <a class="readmore" href="http://jabrahams.ca/c-template-hell.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/c-template-hell.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
             </ol><!-- /#posts-list -->
             </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            <li><a href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                             <li><a href="http://linkedin.com/in/jlabrahams">LinkedIn</a></li>
                             <li><a href="http://twitter.com/JacobAbes">Twitter</a></li>

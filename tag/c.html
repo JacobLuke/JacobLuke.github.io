@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <title>Jacob's Blograhams - c++</title>
         <link rel="stylesheet" href="http://jabrahams.ca/theme/css/main.css" />
-        <link href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
+        <link href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
         <!--[if IE]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -26,7 +26,96 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-casts.html">Cast operators in C++</a></h1>
+                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-templates.html">C++ - Template Hell</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-03-31T00:00:00">
+                Mon 31 March 2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
+        </address>
+<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
+<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
+</footer><!-- /.post-info --><p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
+<p>Let's talk about generic programming.</p>
+<p>In normal, static-type programming, you say things like, "I know foo is an A, and bar is a B, so I know what type I'll get when I write foo + bar." This is pretty efficient: you know what type everything will be, the compiler does too, and if you're wrong there's a clear and efficient way of telling you so. (ie. The compiler can just go and say, "type A is not type Q," and that will be that.)</p>
+<p>However, suppose you want to say, "I know (or believe) foo has some member baz, and bar has some members twiddle and fiddle, but I don't know or care what type they actually are. Let me write a function that takes foo and bar and does something useful." In languages like C, you can...write something else, because C doesn't let you do anything about it. A is A, and nothing else is A (unless you do some crazy type-punning, but don't do that). In other, more developed OO languages, you have (up to) three solutions:</p>
+<ul>
+<li>
+<p>Interface-based programming, or thinking far-enough ahead and giving your objects a relevant base type to do what you want them to. This is nice when possible, but may have problems when you can't modify the interface after-the-fact. (In these cases the <a href="http://en.wikipedia.org/wiki/Adapter_pattern">Adapter design pattern</a> may help.) Languages with interfaces also often have some kind of generics to apply the concept to containers and the like.</p>
+</li>
+<li>
+<p>Duck-typing. This basically says, "Screw type-safety, figure it out when you try to run the code. If foo doesn't have a baz, deal with it." This is extremely common in scripting languages, and the source of endless headaches and bugs that I won't go into here. (I have to save <em>something</em> for my Python rant.)</p>
+</li>
+<li>
+<p>Templates.</p>
+</li>
+</ul>
+<p>Templates are a solution to generic programming the same way a hammer is a solution to a Rubik's Cube. Take the following function:</p>
+<div class="highlight"><pre><span class="n">Some_Return_Type</span> <span class="nf">func</span><span class="p">(</span><span class="n">Some_Input_Type</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>With some clever definitions, we can actually make this compile:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">TIn</span><span class="p">,</span> <span class="kr">typename</span> <span class="n">TRet</span><span class="o">&gt;</span>
+<span class="n">TRet</span> <span class="n">func</span> <span class="p">(</span><span class="n">TIn</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>We can do even better in C++11:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">())</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>And even better in C++14:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>Looks kind of like duck-typing, right? Sure...if duck-typing generated more code every time you called the function with a different set of types. Further, the header-source model of C++ becomes <em>impossible</em> with templates, since the compiler needs the definition (and not just the declaration) to see if it will compile or not. But, you know what? None of this is that bad. You could argue this is actually a good way of doing things and, on a good day, I might agree with you. No, let's go where it actually gets fucked up.</p>
+<h2>Numerical Templates</h2>
+<p>If you're a Java guy or girl (and I know you are), you're probably going, "Oh neat, templates are just like generics without less obvious error messages." And that means you've never seen templates on anything else, like, say, numbers.</p>
+<p>Please pick up your jaw. It doesn't belong on the floor.</p>
+<p>Sure, instead of <code>typename</code>, you can put <code>size_t</code> or <code>bool</code> or even <code>MyMessedUpEnumType</code> inside the angle brackets. Ostensibly for fixed-size arrays (or something?), numerical templates have a not-so-nice unintended feature: template metaprogramming. As in, you can write programs inside template declarations. Neat, sure, but unclear as <em>hell</em>. For instance, here's a way of computing factorials of compile-time constants:</p>
+<div class="highlight"><pre><span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
+<span class="nx">struct</span> <span class="nx">Fact</span> <span class="p">{</span>
+  <span class="nx">static</span> <span class="nx">size_t</span> <span class="nb">value</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
+<span class="nx">size_t</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="nb">N</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span> <span class="o">=</span> <span class="nb">N</span> <span class="o">*</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="nb">N</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span><span class="p">;</span>
+
+<span class="nx">template</span><span class="o">&lt;&gt;</span>
+<span class="nx">size_t</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Put <code>Fact&lt;5&gt;</code> in your program, and it'll just be replaced by 120 seamlessly. Put Fact&lt;7000&gt; and, well, it might compile. Eventually. (GCC does not compile, it just grumbles about "maximum template depths" and mutters curses from the Old World under its breath.)</p>
+<p>The great thing about numerical templates is that they play some part in making compiler errors <em>completely unreadable</em>. The compiler doesn't know you. It can't assume you won't template on an enumeration. It doesn't know your life and what you've been through. GCC can't afford to take you out to dinner and learn your favourite band. Hell, you might've even <em>wanted</em> the template not to compile...</p>
+<h2>SFINAE and type-traits</h2>
+<p>C++ has this neat (read: horrifying) idiom called, "Substitution Failure is not an Error," or SFINAE for short. It basically says to the compiler, "I've defined this template in 2 (or more) ways. Figure out which one I mean." While (ostensibly) included for good reasons (for instance, you might want to handle pointer-types and value-types differently), it's usually used in ways that fit more into dynamically typed languages: determining attributes of types after-the-fact. Which, y'know, <em>defeats the original purpose of templates</em>.</p>
+<p>But you know what? Compile-time duck-typing isn't the worst solution. It's strictly better than <em>runtime</em> duck-typing, even if you have to know medieval Cyrillic to understand why the compiler thinks you're wrong when you are. It's also more flexible (<em>twitch</em>) than Java-style generics in a lot of ways. Lastly, you have to remember who you're dealing with: C++ developers will run wild with <em>whatever feature you give them</em>. A way to make the compiler Turing-complete? That's a small price to pay.</p>
+<p>And at least you aren't paying at runtime.</p>
+<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-templates.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="http://jabrahams.ca/cpp-casts.html" rel="bookmark"
+                           title="Permalink to Cast operators in C++">Cast operators in C++</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-17T12:00:00">
                 Mon 17 March 2014
@@ -37,79 +126,9 @@
         </address>
 <p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
 <p>tags: <a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/c.html">c++</a></p>
-</footer><!-- /.post-info --><p>Alright, I'm done bitching about Java. The maelstrom from my last post was exhausting (on both sides of the issue), and I don't have enough energy to deal with that every single week. Plus, I'm basically out of content on Java (more or less). Originally, that meant that I would spend this week on Python. However, I saw that as kicking another anthill altogether, so I'm pushing that one back at least a week.</p>
-<p>Instead, let's talk about C++.</p>
-<p>As you may have noticed, the title of this article is <em>somewhat</em> narrow in scope. That's mostly because I couldn't compress my C++ critique to a single article, and slightly to abuse the good faith of my current readerbase in a desperate bid to draw out whatever lifespan this blog has to the last possible second. It's also because I work with C++ fairly rarely, so writing these articles requires drawing out stale vitrol from the dank recesses of my mind, which takes time to cultivate into proper rage. Plus, my relationship with C++ is so much less hateful: I have on multiple occasions <em>actively chosen</em> to use C++ for tasks. So this will be the first of (let's say) 3 articles. (This number will not update with the number of articles I write. It will just become wrong.)</p>
-<h2>Brief History</h2>
-<p>I'm assuming my audience is mostly made up of classmates or colleagues, but it doesn't hurt to go over how C++ came to be. Around the early 70s, Dennis Ritchie was building Unix at Bell Labs, when he decided he needed a language that was more portable, more readable, and less error-prone than assembly code. He built C instead, and the programmers of the 70s took to it like the other young adults of the 70s took to recreational drug use. By the 80s, Bjarne Stroustrup saw the drug addiction-like damage C was doing to people, and decided that the fix of the problem would be to <em>add more features</em>, which is eerily similar to heroin's early history. He spearheaded efforts to build a new language, which he dubbed, "C with Classes, Exceptions, Metaprogramming, Generics, Algorithms, and everything else I could think of." This was shortened to "C with Classes," which was later shortened to "C++" because languages with long names are rarely successful. [citation needed] </p>
-<p>(Side note: because of post-increment semantics, Bjarne made a language that was the same as what C <em>used</em> to be, and changed C in the process. The C++-influenced changes in C since the 80s attest to this.)</p>
-<h2>Cast Operators</h2>
-<p>Suppose you have two types, <code>T</code> and <code>V</code>, and an instance of each, <code>t</code> and <code>v</code> respectively. In C, converting a <code>T</code> to a <code>V</code> is easy: just write <code>v = (V)t</code> and it'll probably do something that makes sense. (To elaborate, it will either make a logical conversion if <code>T</code> and <code>V</code> are both numerical types, and it will just reinterpret the value at that point in memory without changing it otherwise. Or it will crash in an implementation-defined way if you're being an idiot, and you deserve that.)</p>
-<p>C++ decided that C's handling of the situation was, like the rest of the language, insufficient, and went about fixing it in an extremely questionable way, just like they did with the rest of the language. They noted a few problems:</p>
-<ul>
-<li>Casts are too easy to hide in code. If you're looking for places where <code>T</code>s are casted to <code>V</code>s, what string are you going to search the code for? <code>(V)</code>? Good luck with that.</li>
-<li>Casts don't show any intent. What if you thought that <code>T</code>s have a logical interpretation as <code>V</code>s, but in fact your code just ends up manipulating parts of <code>V</code>s that you really shouldn't be touching? To the C compiler, you could <em>want</em> to access parts of <code>V</code> like that, because that's also something C-programmers do, and it has no reason to assume you're a sensible human being.</li>
-<li>Casts aren't user-definable. Well, they kind of are, if you assume that your <code>struct</code>s are always packed in the same way across different architectures and operating systems. (See above for why the compiler doesn't assume you aren't doing this.)</li>
-</ul>
-<p>To fix these perceived problems, C++ did a bunch of things. First and foremost, they created four cast operators:</p>
-<ul>
-<li><code>static_cast</code> - you <em>know</em> that <code>t</code> can be thought of as a <code>V</code>, or you're willing to pay some pretty hefty consequences if you're wrong.</li>
-<li><code>dynamic_cast</code> - <code>T</code> and <code>V</code> are pointer/reference-types, and <code>T</code> is a base type of <code>V</code>. You're pretty sure <code>t</code> is actually a <code>V</code>, but you don't want your program to explode if you're wrong, so you're okay if an exception (specifically <code>std::bad_cast</code>) is thrown when your assumption turns out to be false. (If everything is pointers, <code>NULL</code>/<code>nullptr</code> is returned instead.)</li>
-<li><code>reinterpret_cast</code> - you know that <code>t</code> isn't a <code>V</code>, but you think that the binary data in a <code>T</code> makes sense interpreted as a <code>V</code>, so you want the compiler to just look the other way for a second or two.</li>
-<li><code>const_cast</code> - You know that <code>T</code>s say they shouldn't be modified, but you have reason to believe that it's okay to do so (assuming that <code>T</code> is a <code>const V</code>). You can also cast away volatility, but I don't really know why you would.</li>
-</ul>
-<p>(Boost is also trying to add <code>lexical_cast</code> to the group, which would act like <code>[tT]oString</code> in Java/C# but in a bidirectional way, which is kind of neat.)</p>
-<p>If you didn't catch my tone, <em>most of these casts are almost always wrong</em>. Let's go through them again:</p>
-<ul>
-<li><code>static</code> is fine, generally speaking. Nice and greppable, clearly shows intent, and is comparable in speed to a C-cast.</li>
-<li><code>dynamic</code> shows too much doubt on the part of the programmer: why do you only <em>think</em> <code>t</code> is a <code>V</code>? Where is this object coming from if you can't accurately describe its type <em>but you still need to know what it is</em>? Most importantly, <em>why are you ever downcasting</em>? (It's also really slow compared to the others.)</li>
-<li>Do I really need to explain why <code>reinterpret</code> is bad? If <code>static</code> won't compile, then you should step back, take a deep breath, and go back to writing assembly. A <code>std::pair&lt;int, int&gt;</code> is not and will never be a <code>double</code>.</li>
-<li><code>const</code> is justifiable when you're dealing with stupid APIs that give you <code>const</code> variables that you know you can actually write to. If you're <code>const_cast</code>ing in code entirely written by you or someone you know, you should <em>really</em> reconsider.</li>
-</ul>
-<p>For backwards-compatability, C++ includes the C-style cast operator. It's behaviour is basically to run through all these cast operators until one makes sense. This is, of course, almost never what you want, since it solves <em>none</em> of the problems the operator had in C.</p>
-<p>Oh, and there are two other cast operator-like options provided in C++:</p>
-<ul>
-<li>you can define an <code>operator V</code> function inside <code>T</code>'s definition. Or anywhere else, because operators can be overloaded in any scope.</li>
-<li>you can define a constructor in <code>V</code> that takes a single argument that is implicitly convertible to a <code>T</code>.</li>
-</ul>
-<p>Of course, I'm leaving something out here. See, both of these are <em>implicit</em>, meaning you can just write <code>v = t;</code> and it will just pick the first thing that works. Sure, you can declare either as <code>explicit</code>, but only in C++11-onwards: <code>explicit</code> only worked for single-argument constructors <em>for at least 15 years</em>. This lead to ridiculous efforts to get around the language's limitation including (but not limited to) the <a href="http://www.artima.com/cppsource/safebool.html">safe-bool idiom</a> for pointer-like truth-value detection. (This is one of my favourite instances of an extremely complex solution to a simple problem.) Thankfully, this kind of innovation is no longer necessary, but it's still a "gotcha" to watch for, since so few other languages mark conversions as implicit by default.</p>
-<p>(I'm not even going to <em>begin</em> on how complicated this gets with templates and determining function prototypes, because this article is long enough and I want to do templates as a separate article.)</p>
-<p>Does C++ handle this all wrong? I'm on the fence with that. Sure, languages like C# have a more structured, logical approach to casts and conversions (eg. limiting the scope, forcing an explicit/implicit declaration etc.), but C++'s design has always been about giving the programmer as many tools as possible without restricting their freedom. Really, it should be common sense not to abuse <code>reinterpret_cast</code>, but if you're crazy enough to want to, well, C++ will hand you the keyword. It's not going to stop you from pointing the gun at your foot, but it'll help you dial 911. (Unfortunately, it won't stop you from tearing out the phone lines.) The implicit-cast-by-default thing is strange, sure, but once you're aware of it you can probably handle it. All in all, C++ lets you do what you want quickly and (if you choose to) clearly, and that's all that really matters.</p>
-<p>To sum up:</p>
-<ul>
-<li>C++ adds 4 more cast operators. 3 are usually a sign of bad programming somewhere along the line.</li>
-<li>C++ lets you define conversions, but you might be surprised when it decides to apply them.</li>
-<li>The design of casting in C++ makes sense for C++, as long as you're okay with that</li>
-</ul>
-<p>C++ is <em>huge</em>. I just wrote more on one tiny part of it than I wrote on <em>all of Java</em>. And I'm probably going to write more, given the right feedback. If that sounds like a good thing, let me know. 'Til then, I'll just continue waiting for my Java-based IDE to unfreeze.</p>
-<p>(Seriously. Not even kidding)</p>
-<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-casts.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/c-template-hell.html" rel="bookmark"
-                           title="Permalink to C++ - Template Hell">C++ - Template Hell</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2013-03-31T00:00:00">
-                Sun 31 March 2013
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info -->                <p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
-                <a class="readmore" href="http://jabrahams.ca/c-template-hell.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/c-template-hell.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+</footer><!-- /.post-info -->                <p>In which C++ does everything wrong for all the right reasons.</p>
+                <a class="readmore" href="http://jabrahams.ca/cpp-casts.html">read more</a>
+<p>There are <a href="http://jabrahams.ca/cpp-casts.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
             </article></li>
             </ol><!-- /#posts-list -->
             </section><!-- /#content -->
@@ -117,7 +136,7 @@
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            <li><a href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                             <li><a href="http://linkedin.com/in/jlabrahams">LinkedIn</a></li>
                             <li><a href="http://twitter.com/JacobAbes">Twitter</a></li>

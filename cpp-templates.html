@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Jacob's Blograhams - tech</title>
+        <title>C++ - Template Hell</title>
         <link rel="stylesheet" href="http://jabrahams.ca/theme/css/main.css" />
         <link href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
@@ -23,10 +23,16 @@
                     <li class="active"><a href="http://jabrahams.ca/category/tech.html">tech</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://jabrahams.ca/cpp-templates.html" rel="bookmark"
+           title="Permalink to C++ - Template Hell">C++ - Template Hell</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="JacobAbes">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-templates.html">C++ - Template Hell</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-31T00:00:00">
                 Mon 31 March 2014
@@ -37,7 +43,7 @@
         </address>
 <p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
 <p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info --><p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
+</footer><!-- /.post-info -->      <p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
 <p>Let's talk about generic programming.</p>
 <p>In normal, static-type programming, you say things like, "I know foo is an A, and bar is a B, so I know what type I'll get when I write foo + bar." This is pretty efficient: you know what type everything will be, the compiler does too, and if you're wrong there's a clear and efficient way of telling you so. (ie. The compiler can just go and say, "type A is not type Q," and that will be that.)</p>
 <p>However, suppose you want to say, "I know (or believe) foo has some member baz, and bar has some members twiddle and fiddle, but I don't know or care what type they actually are. Let me write a function that takes foo and bar and does something useful." In languages like C, you can...write something else, because C doesn't let you do anything about it. A is A, and nothing else is A (unless you do some crazy type-punning, but don't do that). In other, more developed OO languages, you have (up to) three solutions:</p>
@@ -102,83 +108,24 @@
 <p>C++ has this neat (read: horrifying) idiom called, "Substitution Failure is not an Error," or SFINAE for short. It basically says to the compiler, "I've defined this template in 2 (or more) ways. Figure out which one I mean." While (ostensibly) included for good reasons (for instance, you might want to handle pointer-types and value-types differently), it's usually used in ways that fit more into dynamically typed languages: determining attributes of types after-the-fact. Which, y'know, <em>defeats the original purpose of templates</em>.</p>
 <p>But you know what? Compile-time duck-typing isn't the worst solution. It's strictly better than <em>runtime</em> duck-typing, even if you have to know medieval Cyrillic to understand why the compiler thinks you're wrong when you are. It's also more flexible (<em>twitch</em>) than Java-style generics in a lot of ways. Lastly, you have to remember who you're dealing with: C++ developers will run wild with <em>whatever feature you give them</em>. A way to make the compiler Turing-complete? That's a small price to pay.</p>
 <p>And at least you aren't paying at runtime.</p>
-<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-templates.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+<p>J</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "cpp-templates.html";
+        var disqus_url = "http://jabrahams.ca/cpp-templates.html";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://jabrahams.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/cpp-casts.html" rel="bookmark"
-                           title="Permalink to Cast operators in C++">Cast operators in C++</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-03-17T12:00:00">
-                Mon 17 March 2014
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/c.html">c++</a></p>
-</footer><!-- /.post-info -->                <p>In which C++ does everything wrong for all the right reasons.</p>
-                <a class="readmore" href="http://jabrahams.ca/cpp-casts.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/cpp-casts.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/java.html" rel="bookmark"
-                           title="Permalink to Java - the Barbed-Wire Fence of Programming">Java - the Barbed-Wire Fence of Programming</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-03-08T19:00:00">
-                Sat 08 March 2014
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info -->                <p>Occasionally, I like to take a step back and look at the programming languages I've used over the years. What better place to start than with my first, my last, my everything?</p>
-<p>I've been programming Java since high school, and it was the first real language I was ...</p>
-                <a class="readmore" href="http://jabrahams.ca/java.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/java.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/pelican.html" rel="bookmark"
-                           title="Permalink to Pelican, or, How I came to despise Ruby">Pelican, or, How I came to despise Ruby</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-03-02T09:15:00">
-                Sun 02 March 2014
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">Tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/nerdish-stuff.html">nerdish stuff</a><a href="http://jabrahams.ca/tag/programming.html">programming</a><a href="http://jabrahams.ca/tag/metablogging.html">metablogging</a></p>
-</footer><!-- /.post-info -->                <p>This blog has been in the works for...well...a while now.</p>
-<p>Maybe a year, give or take.</p>
-<p>I bought the domain name back in October in the hopes of having something to show off to interviewers. When it came down to actually making the site, I ran into some ...</p>
-                <a class="readmore" href="http://jabrahams.ca/pelican.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/pelican.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
-            </ol><!-- /#posts-list -->
-            </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="social">
                         <h2>social</h2>

@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <title>Jacob's Blograhams</title>
         <link rel="stylesheet" href="http://jabrahams.ca/theme/css/main.css" />
-        <link href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
+        <link href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate" title="Jacob's Blograhams Atom Feed" />
 
         <!--[if IE]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -26,7 +26,96 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/respect-1.html">Self-Respect and Actualization</a></h1>
+                    <h1 class="entry-title"><a href="http://jabrahams.ca/cpp-templates.html">C++ - Template Hell</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-03-31T00:00:00">
+                Mon 31 March 2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
+        </address>
+<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
+<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
+</footer><!-- /.post-info --><p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
+<p>Let's talk about generic programming.</p>
+<p>In normal, static-type programming, you say things like, "I know foo is an A, and bar is a B, so I know what type I'll get when I write foo + bar." This is pretty efficient: you know what type everything will be, the compiler does too, and if you're wrong there's a clear and efficient way of telling you so. (ie. The compiler can just go and say, "type A is not type Q," and that will be that.)</p>
+<p>However, suppose you want to say, "I know (or believe) foo has some member baz, and bar has some members twiddle and fiddle, but I don't know or care what type they actually are. Let me write a function that takes foo and bar and does something useful." In languages like C, you can...write something else, because C doesn't let you do anything about it. A is A, and nothing else is A (unless you do some crazy type-punning, but don't do that). In other, more developed OO languages, you have (up to) three solutions:</p>
+<ul>
+<li>
+<p>Interface-based programming, or thinking far-enough ahead and giving your objects a relevant base type to do what you want them to. This is nice when possible, but may have problems when you can't modify the interface after-the-fact. (In these cases the <a href="http://en.wikipedia.org/wiki/Adapter_pattern">Adapter design pattern</a> may help.) Languages with interfaces also often have some kind of generics to apply the concept to containers and the like.</p>
+</li>
+<li>
+<p>Duck-typing. This basically says, "Screw type-safety, figure it out when you try to run the code. If foo doesn't have a baz, deal with it." This is extremely common in scripting languages, and the source of endless headaches and bugs that I won't go into here. (I have to save <em>something</em> for my Python rant.)</p>
+</li>
+<li>
+<p>Templates.</p>
+</li>
+</ul>
+<p>Templates are a solution to generic programming the same way a hammer is a solution to a Rubik's Cube. Take the following function:</p>
+<div class="highlight"><pre><span class="n">Some_Return_Type</span> <span class="nf">func</span><span class="p">(</span><span class="n">Some_Input_Type</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>With some clever definitions, we can actually make this compile:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">TIn</span><span class="p">,</span> <span class="kr">typename</span> <span class="n">TRet</span><span class="o">&gt;</span>
+<span class="n">TRet</span> <span class="n">func</span> <span class="p">(</span><span class="n">TIn</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>We can do even better in C++11:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">())</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>And even better in C++14:</p>
+<div class="highlight"><pre><span class="n">template</span><span class="o">&lt;</span><span class="kr">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">.</span><span class="n">blargle</span><span class="p">();</span> <span class="p">}</span>
+</pre></div>
+
+
+<p>Looks kind of like duck-typing, right? Sure...if duck-typing generated more code every time you called the function with a different set of types. Further, the header-source model of C++ becomes <em>impossible</em> with templates, since the compiler needs the definition (and not just the declaration) to see if it will compile or not. But, you know what? None of this is that bad. You could argue this is actually a good way of doing things and, on a good day, I might agree with you. No, let's go where it actually gets fucked up.</p>
+<h2>Numerical Templates</h2>
+<p>If you're a Java guy or girl (and I know you are), you're probably going, "Oh neat, templates are just like generics without less obvious error messages." And that means you've never seen templates on anything else, like, say, numbers.</p>
+<p>Please pick up your jaw. It doesn't belong on the floor.</p>
+<p>Sure, instead of <code>typename</code>, you can put <code>size_t</code> or <code>bool</code> or even <code>MyMessedUpEnumType</code> inside the angle brackets. Ostensibly for fixed-size arrays (or something?), numerical templates have a not-so-nice unintended feature: template metaprogramming. As in, you can write programs inside template declarations. Neat, sure, but unclear as <em>hell</em>. For instance, here's a way of computing factorials of compile-time constants:</p>
+<div class="highlight"><pre><span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
+<span class="nx">struct</span> <span class="nx">Fact</span> <span class="p">{</span>
+  <span class="nx">static</span> <span class="nx">size_t</span> <span class="nb">value</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
+<span class="nx">size_t</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="nb">N</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span> <span class="o">=</span> <span class="nb">N</span> <span class="o">*</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="nb">N</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span><span class="p">;</span>
+
+<span class="nx">template</span><span class="o">&lt;&gt;</span>
+<span class="nx">size_t</span> <span class="nx">Fact</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">::</span><span class="nl">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Put <code>Fact&lt;5&gt;</code> in your program, and it'll just be replaced by 120 seamlessly. Put Fact&lt;7000&gt; and, well, it might compile. Eventually. (GCC does not compile, it just grumbles about "maximum template depths" and mutters curses from the Old World under its breath.)</p>
+<p>The great thing about numerical templates is that they play some part in making compiler errors <em>completely unreadable</em>. The compiler doesn't know you. It can't assume you won't template on an enumeration. It doesn't know your life and what you've been through. GCC can't afford to take you out to dinner and learn your favourite band. Hell, you might've even <em>wanted</em> the template not to compile...</p>
+<h2>SFINAE and type-traits</h2>
+<p>C++ has this neat (read: horrifying) idiom called, "Substitution Failure is not an Error," or SFINAE for short. It basically says to the compiler, "I've defined this template in 2 (or more) ways. Figure out which one I mean." While (ostensibly) included for good reasons (for instance, you might want to handle pointer-types and value-types differently), it's usually used in ways that fit more into dynamically typed languages: determining attributes of types after-the-fact. Which, y'know, <em>defeats the original purpose of templates</em>.</p>
+<p>But you know what? Compile-time duck-typing isn't the worst solution. It's strictly better than <em>runtime</em> duck-typing, even if you have to know medieval Cyrillic to understand why the compiler thinks you're wrong when you are. It's also more flexible (<em>twitch</em>) than Java-style generics in a lot of ways. Lastly, you have to remember who you're dealing with: C++ developers will run wild with <em>whatever feature you give them</em>. A way to make the compiler Turing-complete? That's a small price to pay.</p>
+<p>And at least you aren't paying at runtime.</p>
+<p>J</p><p>There are <a href="http://jabrahams.ca/cpp-templates.html#disqus_thread">comments</a>.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="http://jabrahams.ca/respect-1.html" rel="bookmark"
+                           title="Permalink to Self-Respect and Actualization">Self-Respect and Actualization</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2014-03-24T00:00:00">
                 Mon 24 March 2014
@@ -37,28 +126,11 @@
         </address>
 <p>In <a href="http://jabrahams.ca/category/life.html">Life</a>. </p>
 <p>tags: <a href="http://jabrahams.ca/tag/mental-health.html">mental health</a><a href="http://jabrahams.ca/tag/heavy.html">heavy</a></p>
-</footer><!-- /.post-info --><p>(Note: this post was delayed for a few reasons, not the least of which was a desperately needed rewrite.)</p>
-<p>For those keeping track at home, this is Part 2 of the series I started <a href="/pride.html">here</a>. In its way, it's also Part 1 (of 3, I think) of a subseries inside the series based on a common theme. Yes, this is confusing, and yes, this adds up to 4 instead of 3 (as previously stated). If you look at the revision history on Github, the page actually said 4 for a while, which I changed once when planning things and won't change back because <em>stop telling me what to do</em>. Now if you don't mind, let's get to the actual content...</p>
-<p>I'd originally planned for this article to focus on respect, which is a pretty amorphous and vague term in a lot of ways. Respect for whom? How are you showing it? To what extent? Most importantly, <em>why</em> are you showing respect? If you combine all the possible combinations of answers, you get...well, way more topics than I have energy to write about. Knowing my SQL, I decided to <code>GROUP BY target</code>, because it flows nicely. (I'm aware you wouldn't put this information into a database. Stop nitpicking.)</p>
-<h2>You</h2>
-<p>We'll start off with the person you know best: you. Without exception, you're the person you spend the most time with. You've also known you since before kindergarten, you've grown up with you, you've seen you naked, and (barring unforseen circumstances) you'll grow old with you. If you have to put up with you all this time, why not at least pay you <em>some</em> respect? I'll explain how:</p>
-<p>There is a person you deserve to be.</p>
-<p>Don't think for a second that I mean you're entitled to higher pay (though you might be), or to win the lottery (though you might), or to violate physical laws (you won't). I mean, every person is a collection of values, experiences, and brain chemistry that make up what they are. These reflect in our personality and actions, which in turn affect all of them in this beautiful feedback loop.</p>
-<p>And there's no reason not to make the person you deserve better.</p>
-<p>A month ago or so, I was wondering how I was still standing. I could let circumstances take over. I could yield to my condition. I could put up all my old walls and shells and seal everything away. There were so many ways I could put things together and come out with a wrong result.</p>
-<p>But I didn't. I kept moving, because despite it all I'd <em>earned</em> the characteristics I'd needed to keep going. I'd earned the strength to go on from putting up with everything for so many years. I'd earned the tricks and hotfixes I use with the years I'd invested in developing them. I'd earned the emotional openness by making it through the most emotionally raw period in my life more-or-less intact. And I couldn't throw that effort, that investment, that <em>self-dedication</em>, away. Because I <em>deserve</em> to be someone who got through it all. I have to keep trying to <a href="http://tvtropes.org/pmwiki/pmwiki.php/Main/EarnYourHappyEnding">earn my happy ending</a>, not because I'm an optimist, not because I have any reason to believe everything will be alright, but because it's what I deserve to do.</p>
-<p>And you know what? It's what you deserve too.</p>
-<p>J</p>
-<blockquote>
-<p>There's a life out there</p>
-<p>And it's gonna be mine</p>
-</blockquote>
-<p>-- <cite>Train</cite> (3 Doors Down)</p><p>There are <a href="http://jabrahams.ca/respect-1.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                <p>(Note: this post was delayed for a few reasons, not the least of which was a desperately needed rewrite.)</p>
+<p>For those keeping track at home, this is Part 2 of the series I started <a href="/pride.html">here</a>. In its way, it's also Part 1 (of 3, I think) of a subseries ...</p>
+                <a class="readmore" href="http://jabrahams.ca/respect-1.html">read more</a>
+<p>There are <a href="http://jabrahams.ca/respect-1.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -196,35 +268,13 @@
                 <a class="readmore" href="http://jabrahams.ca/a-blog.html">read more</a>
 <p>There are <a href="http://jabrahams.ca/a-blog.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
             </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="http://jabrahams.ca/c-template-hell.html" rel="bookmark"
-                           title="Permalink to C++ - Template Hell">C++ - Template Hell</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2013-03-31T00:00:00">
-                Sun 31 March 2013
-        </abbr>
-
-        <address class="vcard author">
-                By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
-        </address>
-<p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
-</footer><!-- /.post-info -->                <p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
-                <a class="readmore" href="http://jabrahams.ca/c-template-hell.html">read more</a>
-<p>There are <a href="http://jabrahams.ca/c-template-hell.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
-            </article></li>
             </ol><!-- /#posts-list -->
             </section><!-- /#content -->
         <section id="extras" class="body">
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="http://jabrahams.ca/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            <li><a href="http://jabrahams.ca/feeds\all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                             <li><a href="http://linkedin.com/in/jlabrahams">LinkedIn</a></li>
                             <li><a href="http://twitter.com/JacobAbes">Twitter</a></li>
