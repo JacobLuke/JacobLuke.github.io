@@ -39,14 +39,14 @@
 <p>tags: <a href="http://jabrahams.ca/tag/tech.html">tech</a><a href="http://jabrahams.ca/tag/c.html">c++</a><a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a></p>
 </footer><!-- /.post-info --><p><em>Part II in a <a href="cpp-casts.html">series</a></em></p>
 <p>Let's talk about generic programming.</p>
-<p>In normal, static-type programming, you say things like, "I know foo is an A, and bar is a B, so I know what type I'll get when I write foo + bar." This is pretty efficient: you know what type everything will be, the compiler does too, and if you're wrong there's a clear and efficient way of telling you so. (ie. The compiler can just go and say, "type A is not type Q," and that will be that.)</p>
-<p>However, suppose you want to say, "I know (or believe) foo has some member baz, and bar has some members twiddle and fiddle, but I don't know or care what type they actually are. Let me write a function that takes foo and bar and does something useful." In languages like C, you can...write something else, because C doesn't let you do anything about it. A is A, and nothing else is A (unless you do some crazy type-punning, but don't do that). In other, more developed OO languages, you have (up to) three solutions:</p>
+<p>In normal, static-type programming, you say things like, "I know <code>foo</code> is an <code>A</code>, and <code>bar</code> is a <code>B</code>, so I know what type I'll get when I write <code>foo + bar</code>." This is pretty efficient: you know what type everything will be, the compiler does too, and if you're wrong there's a clear and efficient way of telling you so. (ie. The compiler can just go and say, "type <code>A</code> is not type <code>Q</code>," and that will be that.)</p>
+<p>However, suppose you want to say, "I know (or believe) <code>foo</code> has some member <code>baz</code>, and <code>bar</code> has some members <code>twiddle</code> and <code>fiddle</code>, but I don't know or care what type they actually are. Let me write a function that takes <code>foo</code> and <code>bar</code> and does something useful." In languages like C, you can...write something else, because C doesn't let you do anything about it. <code>A</code> is <code>A</code>, and nothing else is <code>A</code>, no matter how much it dreams of being <code>A</code> at night. (Unless you do some crazy type-punning. Don't do that). In other, more developed OO languages, you have (up to) three solutions:</p>
 <ul>
 <li>
 <p>Interface-based programming, or thinking far-enough ahead and giving your objects a relevant base type to do what you want them to. This is nice when possible, but may have problems when you can't modify the interface after-the-fact. (In these cases the <a href="http://en.wikipedia.org/wiki/Adapter_pattern">Adapter design pattern</a> may help.) Languages with interfaces also often have some kind of generics to apply the concept to containers and the like.</p>
 </li>
 <li>
-<p>Duck-typing. This basically says, "Screw type-safety, figure it out when you try to run the code. If foo doesn't have a baz, deal with it." This is extremely common in scripting languages, and the source of endless headaches and bugs that I won't go into here. (I have to save <em>something</em> for my Python rant.)</p>
+<p>Duck-typing. This basically says, "Screw type-safety, figure it out when you try to run the code. If <code>foo</code> doesn't have a <code>baz</code>, deal with it." This is extremely common in scripting languages, and the source of endless headaches and bugs that I won't go into here. (I have to save <em>something</em> for my Python rant.)</p>
 </li>
 <li>
 <p>Templates.</p>
@@ -96,7 +96,7 @@
 </pre></div>
 
 
-<p>Put <code>Fact&lt;5&gt;</code> in your program, and it'll just be replaced by 120 seamlessly. Put Fact&lt;7000&gt; and, well, it might compile. Eventually. (GCC does not compile, it just grumbles about "maximum template depths" and mutters curses from the Old World under its breath.)</p>
+<p>Put <code>Fact&lt;5&gt;</code> in your program, and it'll just be replaced by 120 seamlessly. Put <code>Fact&lt;7000&gt;</code> and, well, it might compile. Eventually. (GCC does not compile, it just grumbles about "maximum template depths" and mutters curses from the Old World under its breath.)</p>
 <p>The great thing about numerical templates is that they play some part in making compiler errors <em>completely unreadable</em>. The compiler doesn't know you. It can't assume you won't template on an enumeration. It doesn't know your life and what you've been through. GCC can't afford to take you out to dinner and learn your favourite band. Hell, you might've even <em>wanted</em> the template not to compile...</p>
 <h2>SFINAE and type-traits</h2>
 <p>C++ has this neat (read: horrifying) idiom called, "Substitution Failure is not an Error," or SFINAE for short. It basically says to the compiler, "I've defined this template in 2 (or more) ways. Figure out which one I mean." While (ostensibly) included for good reasons (for instance, you might want to handle pointer-types and value-types differently), it's usually used in ways that fit more into dynamically typed languages: determining attributes of types after-the-fact. Which, y'know, <em>defeats the original purpose of templates</em>.</p>
