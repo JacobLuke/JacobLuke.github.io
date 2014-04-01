@@ -87,7 +87,7 @@
 
 <p>Looks kind of like duck-typing, right? Sure...if duck-typing generated more code every time you called the function with a different set of types. Further, the header-source model of C++ becomes <em>impossible</em> with templates, since the compiler needs the definition (and not just the declaration) to see if it will compile or not. But, you know what? None of this is that bad. You could argue this is actually a good way of doing things and, on a good day, I might agree with you. No, let's go where it actually gets fucked up.</p>
 <h2>Numerical Templates</h2>
-<p>If you're a Java guy or girl (and I know you are), you're probably going, "Oh neat, templates are just like generics without less obvious error messages." And that means you've never seen templates on anything else, like, say, numbers.</p>
+<p>If you're a Java guy or girl (and I know you are), you're probably going, "Oh neat, templates are just like generics with less obvious error messages." And that means you've never seen templates on anything else, like, say, numbers.</p>
 <p>Please pick up your jaw. It doesn't belong on the floor.</p>
 <p>Sure, instead of <code>typename</code>, you can put <code>size_t</code> or <code>bool</code> or even <code>MyMessedUpEnumType</code> inside the angle brackets. Ostensibly for fixed-size arrays (or something?), numerical templates have a not-so-nice unintended feature: template metaprogramming. As in, you can write programs inside template declarations. Neat, sure, but unclear as <em>hell</em>. For instance, here's a way of computing factorials of compile-time constants:</p>
 <div class="highlight"><pre><span class="nx">template</span> <span class="o">&lt;</span><span class="nx">size_t</span> <span class="nb">N</span><span class="o">&gt;</span>
