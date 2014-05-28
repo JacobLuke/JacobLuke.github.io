@@ -26,7 +26,7 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/pretty-boy-python.html">Pretty-boy Python</a></h1>
+                    <h1 class="entry-title"><a href="http://jabrahams.ca/python.html">Pretty-boy Python</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2014-05-27T00:00:00">
                 Tue 27 May 2014
@@ -46,7 +46,7 @@
 <p>Don't get me wrong, duck-typing is great when you want to pass things along that have the same interface but aren't strict subclasses. As the canonical example goes, if it <code>quack</code>s like a duck and <code>walk</code>s like a duck, then it's a duck. But then suddenly you get an object that refuses to <code>walk</code> unless you call <code>caffeinate</code> first, and for whom <code>quack</code> isn't even a function but a collection of works by Kerouac, and you realize rapidly that a language that lets a program pass a confused philosophy undergraduate where a duck is expected is not necessarily designed for stability and robustness.</p>
 <p>So you stop coding functions and start making classes, because by golly Python's class syntax is clear and concise. You define your <code>__init__</code> to construct your <code>Thingamajig</code>s, and, when you decide you need more control over allocation, you also define your <code>__new__</code>, because why not have two separate constructors? Then you realize that your <code>Thingamajig</code>s are actually <code>instance</code>s because this is Python 2 and you forgot to subclass <code>object</code>, and <em>of course you wouldn't want objects to be created from classes</em>. You define your <code>__str__</code> for when you want to print <code>Thingamajigs</code> to the console, and your <code>__repr__</code> for...um...when you want to pass it to <code>eval</code>? Then you want <code>Thingamajig</code>s to have pointer-like behaviour in <code>if</code> statements, so you define <code>__bool__</code>. But that doesn't work (except when you use a 3.x interpreter) and your objects are always True, so you look into the docs and realize you have to define <code>__nonzero__</code>, because consistent naming conventions <em>are apparently not a thing in Python</em>.</p>
 <p>Once you've got your thingamajigs, you can manipulate the base class as you please, since it's just a special instance of a <code>type</code> object. This might sound familiar if you've spent extensive time programming with Javascript's prototype-based model, in which case dollar signs likely bring to mind not hordes and hordes of money but nightmares of clumpy, irregular, unstable frameworks making a bad problem worse in unpredictable and subtle ways. You probably feel right at home here, actually.</p>
-<p><strong>(THIS IS NOT FINISHED)</strong></p><p>There are <a href="http://jabrahams.ca/pretty-boy-python.html#disqus_thread">comments</a>.</p>                </article>
+<p><strong>(THIS IS NOT FINISHED)</strong></p><p>There are <a href="http://jabrahams.ca/python.html#disqus_thread">comments</a>.</p>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
