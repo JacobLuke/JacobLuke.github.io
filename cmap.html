@@ -78,7 +78,7 @@
 <p>(This is a bad example. Don't do this.)</p>
 <p>Now, in C, you don't have any of that fancy-shmancy constructor/destructor/assignment-operator/definite lifespan stuff. Instead you have functions! And pointers! And misery!</p>
 <div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
-   <span class="kt">int</span> <span class="n">k</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="o">*</span> <span class="n">k</span><span class="p">;</span>
 <span class="p">}</span> <span class="n">Foo</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">Foo_init</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
