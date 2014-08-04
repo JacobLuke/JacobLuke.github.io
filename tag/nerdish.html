@@ -26,28 +26,195 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://jabrahams.ca/python.html">Pretty-boy Python</a></h1>
+                    <h1 class="entry-title"><a href="http://jabrahams.ca/cmap.html">Typesafe, Threadsafe Generics in C: A Tale of hubris</a></h1>
 <footer class="post-info">
-        <abbr class="published" title="2014-05-27T00:00:00">
-                Tue 27 May 2014
+        <abbr class="published" title="2014-08-04T00:00:00">
+                Mon 04 August 2014
         </abbr>
 
         <address class="vcard author">
                 By <a class="url fn" href="http://jabrahams.ca/author/jacob-abrahams.html">Jacob Abrahams</a>
         </address>
 <p>In <a href="http://jabrahams.ca/category/tech.html">tech</a>. </p>
-<p>tags: <a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a><a href="http://jabrahams.ca/tag/programming.html">programming</a></p>
-</footer><!-- /.post-info --><p>I don't think I have a relationship with anything in the realm of software engineering so vitriolic and amorous and unstable as my love-hate feud with Python. I have a strong distaste for Java tempered by respect for design choices. I have a wary friendship with C++, using it when I can but always keeping my eye on it, never trusting it to do the right thing when I'm not watching. I begrudgingly use Javascript when I have little other choice, its <em>lingua franca</em> status forming a teleological argument against the divine.</p>
-<p>But Python? Python's different.</p>
-<p>It's my best frenemy. I use it for so much: personal projects, <a href="pelican.html">this blog</a>, and even instead of a calculator more often than not. It's the first thing at my fingers for prototyping and simple calculations, and I would doubtlessly waste endless hours without it.</p>
-<p>And Python is <em>wrong</em>.</p>
-<p>Sure, whitespace indentation is nice...if you're looking at it. But what if you're blind? Suddenly, you have to be Rainman to figure out scope, keeping track of whether your screenreader said "space" 6 times, 8 times, or 22, and when the last time it said that number was. Even if you can see, it can be a total pain to track down a SyntaxError caused by an unmatched dedent you can't find <em>because of course it's invisible</em>.</p>
-<p>Okay, fine, so maybe you can make do, decide on a team standard for a prime number of spaces per indent to make it easy to keep track of where your scope begins and ends. Then you're programming along, creating <code>Foo</code>s and <code>Bar</code>s and passing them along to God-knows-what functions and methods. Then suddenly you get an <code>AttributeError</code> in some obscure code path with an inexplicable message like <code>object of type Foo has no attribute intValue</code> and you're wondering how it happened, since that doesn't even <em>follow</em> your naming convention (let alone Python's), then you reconsider your usage that doesn't allow or encourage type-checking. (I think everyone goes through this moment at least once in their Python career.)</p>
-<p>Don't get me wrong, duck-typing is great when you want to pass things along that have the same interface but aren't strict subclasses. As the canonical example goes, if it <code>quack</code>s like a duck and <code>walk</code>s like a duck, then it's a duck. But then suddenly you get an object that refuses to <code>walk</code> unless you call <code>caffeinate</code> first, and for whom <code>quack</code> isn't even a function but a collection of works by Kerouac, and you realize rapidly that a language that lets a program pass a confused philosophy undergraduate where a duck is expected is not necessarily designed for stability and robustness.</p>
-<p>So you stop coding functions and start making classes, because by golly Python's class syntax is clear and concise. You define your <code>__init__</code> to construct your <code>Thingamajig</code>s, and, when you decide you need more control over allocation, you also define your <code>__new__</code>, because why not have two separate constructors? Then you realize that your <code>Thingamajig</code>s are actually <code>instance</code>s because this is Python 2 and you forgot to subclass <code>object</code>, and <em>of course you wouldn't want objects to be created from classes</em>. You define your <code>__str__</code> for when you want to print <code>Thingamajigs</code> to the console, and your <code>__repr__</code> for...um...when you want to pass it to <code>eval</code>? Then you want <code>Thingamajig</code>s to have pointer-like behaviour in <code>if</code> statements, so you define <code>__bool__</code>. But that doesn't work (except when you use a 3.x interpreter) and your objects are always True, so you look into the docs and realize you have to define <code>__nonzero__</code>, because consistent naming conventions <em>are apparently not a thing in Python</em>.</p>
-<p>Once you've got your thingamajigs, you can manipulate the base class as you please, since it's just a special instance of a <code>type</code> object. This might sound familiar if you've spent extensive time programming with Javascript's prototype-based model, in which case dollar signs likely bring to mind not hordes and hordes of money but nightmares of clumpy, irregular, unstable frameworks making a bad problem worse in unpredictable and subtle ways. You probably feel right at home here, actually.</p>
-<p>You find that someone using your <code>Thingamajig</code> is changing the <code>create</code> member function to an empty <code>frozenset</code> with little justification, which is causing your script to Hindenburg the entire code ecosystem you use. So you look into making <code>create</code> private, which is impossible of course because, as Python says, "We're all adults here," and nothing can ever be private. I'm pretty sure Python was given "the talk" by the NSA instead of proper parents, because as far as I know privacy is still a thing when you're adult. While implying that languages like Java treat you like a child is all well and good (a point <a href="java.html">I've made in the past</a>), implying that there's no difference between public fields and implementation details is going way too far.</p>
-<p><strong>(THIS IS NOT FINISHED)</strong></p><p>There are <a href="http://jabrahams.ca/python.html#disqus_thread">comments</a>.</p>                </article>
+<p>tags: <a href="http://jabrahams.ca/tag/nerdish.html">nerdish</a><a href="http://jabrahams.ca/tag/hubris.html">hubris</a><a href="http://jabrahams.ca/tag/dont-try-this-at-home.html">don't try this at home</a></p>
+</footer><!-- /.post-info --><p>When I learned programming, I learned C about 4-6 months before C++ (and Java about 2 years before both as I've mentioned <a href="java.html">previously</a>). I never really noticed, but this had some hand in shaping how I look at problems: I'm more liable to stick to imperative, light-OO programs, more comfortable with dealing with raw memory, and more familiar with rolling my own...well...everything. Essentially, I program to whatever higher-level functionality is present, but don't miss a beat when something's missing.</p>
+<p>It can also make me bite off a lot more than I can chew at times.</p>
+<p>Consider an example. In a Computer Networks course I took this summer, we were assigned to implement a client-server protocol ontop of some (not very performant) infrastructure. The details aren't important, save for one: all of the backing code, including the test code we had to link against, was in C. A smart, sane programmer might go, "Oh, I definitely need some more complex data structures, let's just <code>extern "C"</code> the code and write some wrappers and use C++ like a normal person."</p>
+<p>We didn't do that.</p>
+<p>In a move lauded by many as "crazy" and "idiotic", we decided to write the code in C. This could have turned out <em>far</em> worse (most of our bugs actually resulted in starting the assingment late, rather than "We could do this better in C++"), but did leave us with one problem: for a surprising number of parts of the system, we needed a map. Now, most people would stop here and switch to C++, foreseeing the sheer number of type-incompatibilities, segfaults, and other horrendous yet subtle bugs that would be completely avoided using a <code>std::map</code>.</p>
+<p>I am not most people.</p>
+<h1>OO in C</h1>
+<p>In C++, object-oriented programming is straightforward, which makes sense given it's the reason for C++'s existence. You might have a class declaration like so:</p>
+<div class="highlight"><pre><span class="n">class</span> <span class="n">Foo</span> <span class="p">{</span>
+<span class="nl">public:</span>
+  <span class="n">Foo</span><span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">);</span>
+  <span class="o">~</span><span class="n">Foo</span><span class="p">();</span>
+<span class="nl">private:</span>
+  <span class="kt">int</span> <span class="o">*</span> <span class="n">k</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<p>and a definition like so:</p>
+<div class="highlight"><pre><span class="n">Foo</span><span class="o">::</span><span class="n">Foo</span><span class="p">(</span><span class="kt">int</span> <span class="o">&amp;</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">this</span><span class="o">-&gt;</span><span class="n">k</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">Foo</span><span class="o">::</span><span class="n">Foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="o">*</span><span class="n">k</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">Foo</span><span class="o">::~</span><span class="n">Foo</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">delete</span> <span class="n">k</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(This is a bad example. Don't do this.)</p>
+<p>Now, in C, you don't have any of that fancy-shmancy constructor/destructor/assignment-operator/definite lifespan stuff. Instead you have functions! And pointers! And misery!</p>
+<div class="highlight"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">k</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Foo</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">Foo_init</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// You fucked up</span>
+     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="n">f</span><span class="o">-&gt;</span><span class="n">k</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span> <span class="n">k</span><span class="p">);</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">k</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Yes this happens</span>
+     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="o">*</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">k</span><span class="p">)</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">Foo_func</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">ret</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Reconsider your life choices</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="o">*</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">k</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">Foo_destroy</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span> <span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// No seriously, something&#39;s wrong with you</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">free</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">k</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Notice all the differences:</p>
+<ul>
+<li>No member functions. This one's actually pretty tame, as far as problems go, but it does mean you have to verify each and every time that your object <em>actually exists</em>.</li>
+<li>No access control. I mean, sure, using a private implementation idiom might be a good idea, but then you have to constantly have one more layer of indirection, and that's just messy.</li>
+<li>No scope-based lifespan. Every time you want to use a <code>Foo</code>, you have to manually call <code>Foo_init</code> before using it, and <code>Foo_destroy</code> after it leaves scope. If you don't, well, you might never know! It might still work. Or not. It depends on what's in the garbage memory you're writing to, which is a source of <em>most of the bugs in C and C++ programs</em>.</li>
+<li>No real exceptions. Notice how every function that does something returns an <code>int</code>? That's error handling. And it's all you've got. Sure, you can dress it up pretty by using Unix error codes or a custom enum, but at the core of it you're still passing a number around that says in some cryptic way whether or not your program is actually working, and you can't verify if anyone <em>is actually reading the value or just assuming it's okay</em>.</li>
+</ul>
+<p>Still with me? Good. We have eight more circles to pass through.</p>
+<p>Another feature present C++ provides you with, besides automatic lifespan and proper exception-handling (ish), is template programming. Suppose you had some kind of container object <code>Bar</code>, which just held a single field of that type. (Don't ask why you'd want this. You wouldn't.) In C++, you could do this:</p>
+<p>template <typename T>
+   class Bar {
+     public:
+       Bar(T t);
+       T getItem();
+     private:
+       T item;
+   };</p>
+<p>You could also do things like make <code>item</code> a reference, make <code>getItem</code> const, or a bunch of other options. If you wanted to do the same in C, you'd have to write something like this (skipping error-handling for now):</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Bar</span> <span class="p">{</span>
+  <span class="kt">void</span> <span class="o">*</span> <span class="n">item</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">Bar_init</span><span class="p">(</span><span class="n">Bar</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="n">b</span><span class="o">-&gt;</span><span class="n">item</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">Bar_getItem</span><span class="p">(</span><span class="n">Bar</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">void</span> <span class="o">**</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">item</span><span class="p">;</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Welp, there goes type-safety. And scope-checking. If you didn't know for sure that <code>value</code> and your <code>Bar</code> would stay in the same scope, you'd have to do this:</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="nf">Bar_init</span> <span class="p">(</span><span class="n">Bar</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">value</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">item_size</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="n">b</span><span class="o">-&gt;</span><span class="n">item</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">item_size</span><span class="p">);</span>
+  <span class="c1">// ...</span>
+  <span class="n">memcpy</span><span class="p">(</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">item_size</span><span class="p">);</span>
+  <span class="c1">//...</span>
+<span class="p">}</span>
+
+<span class="c1">// Bar_getItem is the same for now</span>
+
+<span class="kt">int</span> <span class="nf">Bar_destroy</span><span class="p">(</span><span class="n">Bar</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="n">free</span><span class="p">(</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">item</span><span class="p">);</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Oddly enough: this also shows the first steps along the way to type-checking: checking the <em>size</em> of elements at runtime. It's more-or-less the only thing we can do, short of some twisted form of hell involving macros and cryptic compiler errors and drinking until you can forget you ever tried. Sure, this code is ugly, but it works. Most of the time. Onto the actual example...</p>
+<h1>Maps to Hell and Back Again</h1>
+<p>If you don't need iteration or deletion, a map has a pretty simple interface:</p>
+<ul>
+<li>Initialize with a set type of key and type of value (duh)</li>
+<li>put a value into the map for a specified key</li>
+<li>find a value (if it exists) put into the map for a given key</li>
+<li>destroy a map (also duh)</li>
+</ul>
+<p>Written out in C, this might look something like this:</p>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">Map</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">Map_init</span><span class="p">(</span><span class="k">struct</span> <span class="n">Map</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">key_size</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">value_size</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">Map_put</span><span class="p">(</span><span class="k">struct</span> <span class="n">Map</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">key</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">value</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">Map_get</span><span class="p">(</span><span class="k">struct</span> <span class="n">Map</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">key</span><span class="p">,</span> <span class="kt">void</span> <span class="o">**</span> <span class="n">ret</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">Map_destroy</span><span class="p">(</span><span class="k">struct</span> <span class="n">Map</span> <span class="o">*</span> <span class="n">m</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Hey, notice the <code>key_size</code> and <code>value_size</code>? Remember what I said about type-checking? This is how you know how big your passed-in memory blocks will be. Or this is how big you <em>hope</em> they'll be. (More on that later.)</p>
+<p>I'll skip the actual implementation for brevity's sake, but in our case I used a <a href="http://en.wikipedia.org/wiki/Double_hashing">double-hashing</a>-based open-addressing map using two hash functions based on Java's hashCode. (Good programming is lazy programming. If I'd taken this into account earlier, we wouldn't be writing C.) The primary reason you need <code>key_size</code> and <code>value_size</code> here is that both the keys and values are stored in an array, and you need to know how to index that array, and how big it should be. Adding a key to the map at an index boiled down to:</p>
+<div class="highlight"><pre><span class="n">memcpy</span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">key_array</span> <span class="o">+</span> <span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="n">m</span><span class="o">-&gt;</span><span class="n">key_size</span><span class="p">),</span> <span class="n">key</span><span class="p">,</span> <span class="n">m</span><span class="o">-&gt;</span><span class="n">key_size</span><span class="p">);</span>
+</pre></div>
+
+
+<p>and adding a value for the key was very similar. Getting a value at an index turned out to be really simple as well:</p>
+<div class="highlight"><pre><span class="o">*</span><span class="n">ret</span> <span class="o">=</span> <span class="n">m</span><span class="o">-&gt;</span><span class="n">value_array</span> <span class="o">+</span> <span class="p">(</span><span class="n">index</span> <span class="o">*</span> <span class="n">m</span><span class="o">-&gt;</span><span class="n">value_size</span><span class="p">);</span>
+</pre></div>
+
+
+<p>(This does introduce a bug later on. Try and guess how while you read the next few paragraphs.)</p>
+<p>If you want to make this threadsafe, you can even do that easily: since you're implementing it yourself, add a reader-writer lock, read-lock it on getting a value, and write-lock it when adding a key. (This also becomes important.)</p>
+<p>And that's it. Everything works. Maps are solved, and as <a href="https://twitter.com/JacobAbes/status/488707294352654336">this tweet</a> clearly shows, I've outperformed Bjarne himself at making a generic hash map. Close the shop, write the rest, and go home, right?</p>
+<p>Well, not exactly.</p>
+<p>Let's say you have a Map with key-type <code>K</code> and value-type <code>V</code>. Suppose, instead of passing a <code>V*</code> to <code>Map_put</code>, a client passes a <code>V**</code>.  When you try to use the <code>V*</code> later on (or possibly anything else in the map), something is bound to go <em>horribly wrong</em>. So you think to yourself, "I want type-checking, but <code>void *</code>s don't know how big they are. If only there were a way to know how big the original memory was..." And then you take another shot of vodka, because you realize that you need a function to act in local scope to the caller, and the only way to do this is macros.</p>
+<p>Let's start by changing some definitions:</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="nf">Map_put</span><span class="p">(</span><span class="n">Map</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">key</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">key_size</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">value</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">value_size</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">Map_get</span><span class="p">(</span><span class="n">Map</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">key</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">key_size</span><span class="p">,</span> <span class="kt">void</span> <span class="o">**</span> <span class="n">ret</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">ret_size</span><span class="p">);</span>
+</pre></div>
+
+
+<p>The implementation changes are pretty simple: they check that <code>key_size</code> and <code>value_size</code> match those of the Map passed in, return an error if they don't, and then continue along in the way that the original implementation did. However, we can't rely on the user to actually use them right, because they were reckless enough to use a C-based map in the first place, so we add macros to call them:</p>
+<p>#define MAP_PUT(m, key, value) Map_put(m, key, sizeof(<em>key), value, sizeof(</em>value))
+   #define MAP_GET(m, key, ret) Map_get(m, key, sizeof(<em>key), &amp;ret, sizeof(</em>ret))</p>
+<p>We also pass in <code>ret</code> as a single-indirection pointer instead, so we can actually retrieve the defined type. Doing a simple grep for the original functions and swapping them for their disfigured preprocessor cousins is quick if not painless, and bam: type-checking.</p>
+<p>(Note: this obviously falls apart if sizeof(T) and sizeof(T*) are the same.)</p>
+<p>Now that you've had 5 paragraphs to think about it, have you found the other bug? I'll give you a hint: it involves the paragraph <em>right after I mention it</em>.</p>
+<p>See, thread-safety is good and all, but when you return <em>raw references to locations in the array</em> as part of your API, it's pretty much useless. In a system where we had around 5 threads per client/server combination, and each thread potentially had a pointer to the <em>same</em> Map, it wouldn't be inconceivable that they would all call <code>Map_get</code> for the <em>same</em> key. And then operate using the pointed-to value. And then try to manipulate it. All at once. And all the threads would go, "It's okay, I had the reader lock, so I can't be causing concurrency errors," calling <code>pthread_chortle</code> and <code>pthread_grin_smugly</code> as they look with disdain over the broken mess that they see the rest of the program to be, none the wiser that they are the bane of the client programmers, and the source of the "l'esprit de l'escalier"-esque frustration I experienced realizing my error long after the deadline had passed.</p>
+<p>Solving this problem would be pretty trivial (having a mutex for each key or value or index or whatever, adding a method to acquire and free the value for a key), but it just goes to remind one of the foolishness on which this endeavour is based. Programming threadsafe generics in C is best left to the most quixotic of programmers, who waste time tilting at windmills while there are <em>actual dragons to slay</em>. To sum up the lessons learned:</p>
+<ul>
+<li>If you need a container type, consider C++ instead. If you decide to still use C, reconsider. Repeat <em>ad infinitum</em>.</li>
+<li>Concurrency is a fickle beast, but pointers tend to make things worse. </li>
+<li>This is mostly unrelated, but don't assume you can implement something just because you learned about it in class. I was reminded the hard way that a fixed-length closed-hashing hash-map needed to have a prime size to ensure it's actually filled. </li>
+</ul>
+<p>To all the people that called us idiots for doing this...well, you had a point. Still, I like to think that I gained something from all those hours spent staring at pointers and structs to find the <em>one</em> function where the wrong variable was passed by value. I mean, I don't know what it was that I gained. </p>
+<p>I'll just have to dereference it and find out.</p>
+<p>J</p><p>There are <a href="http://jabrahams.ca/cmap.html#disqus_thread">comments</a>.</p>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
