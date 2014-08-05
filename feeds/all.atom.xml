@@ -162,8 +162,11 @@
 
 
 &lt;p&gt;The implementation changes are pretty simple: they check that &lt;code&gt;key_size&lt;/code&gt; and &lt;code&gt;value_size&lt;/code&gt; match those of the Map passed in, return an error if they don't, and then continue along in the way that the original implementation did. However, we can't rely on the user to actually use them right, because they were reckless enough to use a C-based map in the first place, so we add macros to call them:&lt;/p&gt;
-&lt;p&gt;#define MAP_PUT(m, key, value) Map_put(m, key, sizeof(&lt;em&gt;key), value, sizeof(&lt;/em&gt;value))
-   #define MAP_GET(m, key, ret) Map_get(m, key, sizeof(&lt;em&gt;key), &amp;amp;ret, sizeof(&lt;/em&gt;ret))&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#define MAP_PUT(m, key, value) Map_put(m, key, sizeof(*key), value, sizeof(*value))&lt;/span&gt;
+&lt;span class="c"&gt;#define MAP_GET(m, key, ret) Map_get(m, key, sizeof(*key), &amp;amp;ret, sizeof(*ret))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;We also pass in &lt;code&gt;ret&lt;/code&gt; as a single-indirection pointer instead, so we can actually retrieve the defined type. Doing a simple grep for the original functions and swapping them for their disfigured preprocessor cousins is quick if not painless, and bam: type-checking.&lt;/p&gt;
 &lt;p&gt;(Note: this obviously falls apart if &lt;code&gt;sizeof(T)&lt;/code&gt; and &lt;code&gt;sizeof(T*)&lt;/code&gt; are the same. Just don't store pointers or &lt;code&gt;int&lt;/code&gt;s.)&lt;/p&gt;
 &lt;p&gt;Now that you've had 5 paragraphs to think about it, have you found the other bug? I'll give you a hint: it involves the paragraph &lt;em&gt;right after I mention it&lt;/em&gt;.&lt;/p&gt;
